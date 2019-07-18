@@ -1,0 +1,22 @@
+title: SaaS Passport
+description: adaptable standard terms for software as a service
+url: https://saaspassport.org
+homepage: https://saaspassport.org
+github:
+  org: https://github.com/saaspassport
+  forms: https://github.com/saaspassport/saaspassport
+  website: https://github.com/saaspassport/saaspassport.com
+collections:
+    versions:
+      output: true
+defaults:
+  - scope:
+      type: pages
+    values:
+      layout: default
+  - scope:
+      type: versions
+    values:
+      layout: version
+exclude:
+  - README.md

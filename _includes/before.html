@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang=en-US>
+  <head>
+    <meta charset=UTF-8>
+    <meta name=viewport content=width=device-width,initial-scale=1>
+    {% if page.home %}
+    <title>{{site.title}}</title>
+    {% else %}
+    <title>{{page.title}} - {{site.title}}</title>
+    {% endif %}
+    <link href=https://readable.kemitchell.com/all.css rel=stylesheet>
+  </head>
+  <body>
+    <header role=banner>
+      <h1>SaaS Passport</h1>
+      <p>adaptable standard terms for software as a service</p>
+    </header>
