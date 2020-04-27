@@ -2,9 +2,7 @@
 home: true
 ---
 
-{% assign latest = site.versions.last.number %}
-
-Latest Version: [{{latest}}](/versions/{{latest}})
+For terms and downloads, see [commonform.org/passport](https://commonform.org/passport).
 
 SaaS Passport provides a toolkit of standardized legal documents anyone can use to build contract terms for software-as-a-service.
 

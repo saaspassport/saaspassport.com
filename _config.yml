@@ -6,17 +6,10 @@ github:
   org: https://github.com/saaspassport
   forms: https://github.com/saaspassport/saaspassport
   website: https://github.com/saaspassport/saaspassport.com
-collections:
-    versions:
-      output: true
 defaults:
   - scope:
       type: pages
     values:
       layout: default
-  - scope:
-      type: versions
-    values:
-      layout: version
 exclude:
   - README.md
