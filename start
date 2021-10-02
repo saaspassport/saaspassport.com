@@ -1,0 +1,6 @@
+#!/bin/sh
+if [ -z "$PAPERTRAIL_HOST" ]; then
+  node server.js
+else
+  node server.js | npx pino-papertrail --host "$PAPERTRAIL_HOST" --port "$PAPERTRAIL_PORT" --appname "$PAPERTRAIL_APPNAME" --echo
+fi
