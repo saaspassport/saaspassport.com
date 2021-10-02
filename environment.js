@@ -3,7 +3,6 @@ export default () => {
   const variables = [
     { name: 'BASE_HREF', required: true },
     { name: 'DIRECTORY', required: true },
-    { name: 'FEE', required: true },
     { name: 'STRIPE_CLIENT_ID', required: true },
     { name: 'STRIPE_SECRET_KEY', required: true },
     { name: 'STRIPE_PUBLISHABLE_KEY', required: true }
@@ -15,10 +14,6 @@ export default () => {
     if (!value) returned.missing.push(name)
     else returned[name] = value
   })
-  returned.FEE = parseInt(returned.FEE)
-  if (isNaN(returned.FEE)) {
-    returned.missing.push('FEE')
-  }
   returned.production = process.env.NODE_ENV === 'production'
 
   return returned
