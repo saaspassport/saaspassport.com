@@ -7,5 +7,5 @@ export default {
   support: 'support@saaspassport.com',
   base: 'https://saaspassport.com',
   fee: 10,
-  cookie: 'saaspassport'
+  cookie: 'accepted-terms-version'
 }

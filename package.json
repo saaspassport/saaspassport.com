@@ -3,6 +3,8 @@
   "private": true,
   "type": "module",
   "dependencies": {
+    "busboy": "^0.3.1",
+    "cookie": "^0.4.1",
     "do-not-cache": "^1.0.1",
     "escape-html": "^1.0.3",
     "gray-matter": "^4.0.3",
@@ -11,6 +13,7 @@
     "pino": "^6.13.3",
     "pino-http": "^5.8.0",
     "pino-papertrail": "^2.1.0",
+    "querystring": "^0.2.1",
     "run-series": "^1.1.9",
     "send": "^0.17.1",
     "simple-concat": "^1.0.1",

@@ -1,7 +1,8 @@
 // HTTP Server Request Handler
+import Busboy from 'busboy'
 import Stripe from 'stripe'
 import constants from './constants.js'
-// import cookie from 'cookie'
+import cookie from 'cookie'
 import doNotCache from 'do-not-cache'
 import escapeHTML from 'escape-html'
 import fs from 'fs'
@@ -11,12 +12,15 @@ import httpHash from 'http-hash'
 import markdown from 'kemarkdown'
 import parseURL from 'url-parse'
 import path from 'path'
+import querystring from 'querystring'
 import readEnvironment from './environment.js'
 import send from 'send'
 import simpleConcatLimit from 'simple-concat-limit'
 
 const environment = readEnvironment()
 const stripe = new Stripe(environment.STRIPE_SECRET_KEY)
+
+const agreement = grayMatter(fs.readFileSync('agreement.md'))
 
 // Router
 
@@ -25,9 +29,10 @@ const routes = httpHash()
 routes.set('/', serveHomepage)
 routes.set('/pay', servePay)
 routes.set('/agree', serveAgree)
-routes.set('/terms', serveTerms)
+routes.set('/agreement', serveTerms)
 routes.set('/privacy', servePrivacy)
 routes.set('/stripe-webhook', serveStripeWebhook)
+routes.set('/version/:version', requireCookie(serveTerms))
 
 if (!environment.production) {
   routes.set('/internal-error', (request, response) => {
@@ -154,8 +159,77 @@ function serveHomepage (request, response) {
   `)
 }
 
+const agreeForm = {
+  name: 'terms',
+  value: 'accepted'
+}
+
 function serveAgree (request, response) {
-  serve404(request, response)
+  const { method } = request
+  if (method === 'POST') {
+    let parser
+    let valid = false
+    try {
+      parser = new Busboy({
+        headers: request.headers,
+        limits: {
+          fieldNameSize: agreeForm.name.length,
+          fields: 1,
+          fieldSizeLimit: agreeForm.value.length,
+          parts: 1
+        }
+      })
+        .once('field', (name, value, truncated, encoding, mime) => {
+          if (name === agreeForm.name && value === agreeForm.value) {
+            valid = true
+          }
+        })
+        .once('finish', () => {
+          if (valid) {
+            const expires = new Date(
+              Date.now() + (30 * 24 * 60 * 60 * 1000)
+            )
+            setCookie(response, agreement.data.version, expires)
+            const location = request.parsed.query.destination || '/'
+            serve303(request, response, location)
+          } else {
+            serveAgreeForm(request, response)
+          }
+        })
+      request.pipe(parser)
+    } catch (error) {
+      response.statusCode = 400
+      response.end()
+    }
+  } else if (method === 'GET') {
+    serveAgreeForm(request, response)
+  } else {
+    serve405(request, response)
+  }
+}
+
+function serveAgreeForm (request, response) {
+  response.setHeader('Content-Type', 'text/html')
+  response.end(html`
+<!doctype html>
+<html lang=en-US>
+  <head>
+    ${meta({})}
+    <title>SaaS Passport Agreement</title>
+  </head>
+  <body>
+    ${header}
+    <main role=main>
+      <h2>Agreement</h2>
+      <form id=passwordForm method=post>
+        <input type=hidden name=${agreeForm.name} value=${agreeForm.value}>
+        <button type=submit>Agree</button>
+      </form>
+    </main>
+    ${footer}
+  </body>
+</html>
+  `)
 }
 
 function servePay (request, response) {
@@ -313,4 +387,35 @@ function serve302 (request, response, location) {
   response.statusCode = 302
   response.setHeader('Location', location)
   response.end()
+}
+
+function requireCookie (request, response, handler) {
+  return (request, reponse) => {
+    const header = request.headers.cookie
+    if (!header) return redirect()
+    const parsed = cookie.parse(header)
+    const version = parsed[constants.cookie]
+    if (!version) return redirect()
+    if (version !== agreement.data.version) return redirect()
+    handler(request, response)
+  }
+
+  function redirect () {
+    const location = '/agree?' + querystring.stringify({
+      destination: request.url
+    })
+    serve303(request, response, location)
+  }
+}
+
+function setCookie (response, value, expires) {
+  response.setHeader(
+    'Set-Cookie',
+    cookie.serialize(constants.cookie, value, {
+      expires,
+      httpOnly: true,
+      sameSite: 'strict',
+      secure: environment.production
+    })
+  )
 }
