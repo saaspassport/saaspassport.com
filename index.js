@@ -3,19 +3,23 @@ import Busboy from 'busboy'
 import Stripe from 'stripe'
 import constants from './constants.js'
 import cookie from 'cookie'
-import formatDate from './format-date.js'
 import doNotCache from 'do-not-cache'
 import escapeHTML from 'escape-html'
+import formatDate from './format-date.js'
 import fs from 'fs'
 import grayMatter from 'gray-matter'
 import html from './html.js'
 import httpHash from 'http-hash'
 import markdown from 'kemarkdown'
 import parseURL from 'url-parse'
+import path from 'path'
 import querystring from 'querystring'
 import readEnvironment from './environment.js'
+import runParallel from 'run-parallel'
+import semver from 'semver'
 import send from 'send'
 import simpleConcatLimit from 'simple-concat-limit'
+import yaml from 'js-yaml'
 
 const environment = readEnvironment()
 const stripe = new Stripe(environment.STRIPE_SECRET_KEY)
@@ -25,7 +29,11 @@ const agreement = (() => {
   const { content: markdown, data: { version, title, description } } = grayMatter(fs.readFileSync('agreement.md'))
   return { version, title, description, markdown }
 })()
-console.log(agreement)
+
+const versions = fs.readdirSync(path.join(environment.DIRECTORY, 'versions'))
+  .filter(semver.valid)
+  .sort(semver.rcompare)
+const latestVersion = versions.filter(v => semver.prerelease(v) === null)[0]
 
 // Router
 
@@ -36,7 +44,7 @@ routes.set('/pay', servePay)
 routes.set('/agree', serveAgree)
 routes.set('/privacy', servePrivacy)
 routes.set('/stripe-webhook', serveStripeWebhook)
-routes.set('/version/:version', requireCookie(serveVersion))
+routes.set('/versions/:version', requireCookie(serveVersion))
 
 if (!environment.production) {
   routes.set('/internal-error', (request, response) => {
@@ -184,7 +192,7 @@ function serveAgree (request, response) {
               Date.now() + (30 * 24 * 60 * 60 * 1000)
             )
             setCookie(response, agreement.version, expires)
-            const location = request.parsed.query.destination || '/'
+            const location = request.query.destination || '/'
             serve303(request, response, location)
           } else {
             serveAgreeForm(request, response)
@@ -203,6 +211,8 @@ function serveAgree (request, response) {
 }
 
 function serveAgreeForm (request, response) {
+  doNotCache(response)
+  clearCookie(response)
   response.setHeader('Content-Type', 'text/html')
   response.end(html`
 <!doctype html>
@@ -236,7 +246,61 @@ function servePay (request, response) {
 }
 
 function serveVersion (request, response) {
-  serve404(request, response)
+  const { version } = request.parameters
+  request.log.info(request.parameters, 'parameters')
+  runParallel({
+    prompts: done => {
+      const file = path.join(environment.DIRECTORY, 'versions', version, 'prompts.yml')
+      fs.readFile(file, 'utf8', (error, data) => {
+        if (error) return done(error)
+        let parsed
+        try {
+          parsed = yaml.load(data, { schema: yaml.JSON_SCHEMA })
+        } catch (error) {
+          return done(error)
+        }
+        done(null, parsed)
+      })
+    },
+    terms: readTemplate('terms'),
+    order: readTemplate('order')
+  }, (error, results) => {
+    if (error) return serve500(request, response, error)
+    response.setHeader('Content-Type', 'text/html')
+    response.end(html`
+<!doctype html>
+<html lang=en-US>
+  <head>
+    ${meta({
+      title: `${constants.website} ${version}`,
+      description: constants.slogan
+    })}
+    <title>${constants.website}</title>
+  </head>
+  <body>
+    ${nav}
+    ${header}
+    <main role=main>
+      <h2>Version ${version}</h2>
+      <h3>Prompts</h3>
+      <pre>${escapeHTML(results.prompts)}</pre>
+      <h3>Order</h3>
+      <pre>${escapeHTML(results.order)}</pre>
+      <h3>Terms</h3>
+      <pre>${escapeHTML(results.terms)}</pre>
+    </main>
+    ${footer}
+  </body>
+</html>
+    `)
+  })
+
+  function readTemplate (basename) {
+    return done => {
+      const file = path.join(environment.DIRECTORY, 'versions', version, `${basename}.md`)
+      fs.readFile(file, 'utf8', done)
+    }
+  }
 }
 
 function servePrivacy (request, response) {
@@ -353,8 +417,8 @@ function serve302 (request, response, location) {
   response.end()
 }
 
-function requireCookie (request, response, handler) {
-  return (request, reponse) => {
+function requireCookie (handler) {
+  return (request, response) => {
     const header = request.headers.cookie
     if (!header) return redirect()
     const parsed = cookie.parse(header)
@@ -362,13 +426,13 @@ function requireCookie (request, response, handler) {
     if (!version) return redirect()
     if (version !== agreement.version) return redirect()
     handler(request, response)
-  }
 
-  function redirect () {
-    const location = '/agree?' + querystring.stringify({
-      destination: request.url
-    })
-    serve303(request, response, location)
+    function redirect () {
+      const location = '/agree?' + querystring.stringify({
+        destination: request.url
+      })
+      serve303(request, response, location)
+    }
   }
 }
 
@@ -382,4 +446,8 @@ function setCookie (response, value, expires) {
       secure: environment.production
     })
   )
+}
+
+function clearCookie (response) {
+  setCookie(response, '', new Date('1970-01-01'))
 }
