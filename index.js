@@ -256,7 +256,10 @@ function serveAccess (request, response) {
 
 function serveAccessForm (request, response) {
   doNotCache(response)
-  clearCookie(response)
+  if (
+    request.headers.cookie &&
+    cookie.parse(request.headers.cookie)[constants.cookie.name] !== accessTerms.version
+  ) clearCookie(response)
   response.setHeader('Content-Type', 'text/html')
   response.end(html`
 <!doctype html>
