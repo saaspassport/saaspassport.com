@@ -47,7 +47,7 @@
     "gotchas": "! git grep tape.only test && ! git grep console.log test && ! git grep console.error test && ! git grep saveScreenshot test",
     "licenses": "licensee --errors-only",
     "lint": "standard",
-    "test": "NODE_ENV=test tap test/**/*.test.js && npm run test:server",
+    "test": "NODE_ENV=test tap test/**/*.test.js",
     "test:unit": "NODE_ENV=test tap test/unit/*.test.js",
     "test:server": "NODE_ENV=test node test/scripts/*.test.js",
     "test:integration": "NODE_ENV=test tap test/integration/*.test.js"
