@@ -187,10 +187,7 @@ function serveAccess (request, response) {
         })
         .once('finish', () => {
           if (valid) {
-            const expires = new Date(
-              Date.now() + (30 * 24 * 60 * 60 * 1000)
-            )
-            setCookie(response, accessTerms.version, expires)
+            setCookie(response, accessTerms.version)
             const location = request.query.destination || latestVersionHREF
             serve303(request, response, location)
           } else {
@@ -460,6 +457,7 @@ function serve302 (request, response, location) {
 }
 
 const cookieName = 'agreed-to-access-terms'
+const cookieLifetimeDays = 30
 
 function requireCookie (handler) {
   return (request, response) => {
@@ -480,7 +478,10 @@ function requireCookie (handler) {
   }
 }
 
-function setCookie (response, value, expires) {
+function setCookie (response, value) {
+  const expires = new Date(
+    Date.now() + (cookieLifetimeDays * 24 * 60 * 60 * 1000)
+  )
   response.setHeader(
     'Set-Cookie',
     cookie.serialize(cookieName, value, {
