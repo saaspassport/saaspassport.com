@@ -230,7 +230,7 @@ function serveAccessForm (request, response) {
       <form id=passwordForm method=post>
         <input type=hidden name=version value=${accessTerms.version}>
         <h2>${escapeHTML(accessTerms.title)}</h2>
-        <p id=version>Last Updated ${formatTime(accessTerms.version)}</p>
+        <p id=version>These terms were last updated on ${formatTime(accessTerms.version)}.</p>
         ${markdown(accessTerms.markdown)}
         <button id=agree type=submit>Agree</button>
       </form>
