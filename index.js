@@ -34,7 +34,7 @@ const dealTerms = (() => {
     content: preprocessMarkdown(content)
   }
 })()
-dealTerms.version = spawnSync('/usr/bin/git', ['log', '-1', '--format="%ad"', '--date=rfc', '--', 'deal.md']).stdout.toString()
+dealTerms.version = new Date(spawnSync('/usr/bin/git', ['log', '-1', '--format="%ad"', '--date=rfc', '--', 'deal.md']).stdout.toString()).toISOString()
 
 function preloadMarkdown (file) {
   return preprocessMarkdown(fs.readFileSync(file, 'utf8'))
@@ -300,11 +300,11 @@ function serveDealForm (request, response) {
     ${nav}
     <main role=main>
       <form id=passwordForm method=post>
-        <input type=hidden name=version value=${escapeHTML(dealTerms.version)}>
+        <input type=hidden name=version value="${dealTerms.version}">
         <p id=version>These terms were last updated ${escapeHTML(relativeDate(new Date(dealTerms.version)))}, on ${escapeHTML(formatTime(dealTerms.version))}.</p>
-        <button id=agree type=submit>Agree and Continue</button>
+        <button type=submit>Agree and Continue</button>
         ${dealTerms.content}
-        <button id=agree type=submit>Agree and Continue</button>
+        <button type=submit>Agree and Continue</button>
       </form>
     </main>
     ${footer}
