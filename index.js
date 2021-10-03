@@ -174,7 +174,7 @@ function serveHomepage (request, response) {
 
 function serveContribute (request, response) {
   serveStatic(request, response, {
-    content: thanks,
+    content: contribute,
     title: `Contribute to ${constants.name}`,
     heading: 'Contribute',
     description: constants.slogan
