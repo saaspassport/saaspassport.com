@@ -23,22 +23,21 @@ header[role=banner] {
   margin-top: 1rem;
 }
 
-header[role=banner] h1 {
+header[role=banner] img {
+  max-width: 7rem;
+}
+
+h1 {
   margin-bottom: 0;
-  margin-top: 0;
+  margin-top: 0.5rem;
 }
 
 .slogan {
   margin-top: 0.5rem;
 }
 
-#logo {
-  max-width: 7rem;
-}
-
 nav[role=navigation] {
   margin-top: 1rem;
-  text-align: left;
 }
 
 main[role=main] {
@@ -47,16 +46,7 @@ main[role=main] {
 }
 
 footer[role=contentinfo] {
-  padding-top: 1rem;
-  font-size: 80%;
-}
-
-a[href] {
-  text-decoration: none;
-}
-
-a[href]:hover {
-  text-decoration: underline;
+  margin-top: 1rem;
 }
 
 nav[role=navigation] a[href],
@@ -69,33 +59,21 @@ footer[role=contentinfo] a[href]:first-of-type {
   margin-left: 0;
 }
 
-a[href] .logo {
-  display: inline;
-  margin-right: 0.5ex;
-  vertical-align: middle;
-}
-
 footer[role=contentinfo] {
   text-align: right;
 }
 
-footer[role=contentinfo] ul {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
+a[href] {
+  text-decoration: none;
+}
+
+a[href]:hover {
+  text-decoration: underline;
 }
 
 h2 {
-  display: inline-block;
   margin-bottom: 0;
   margin-top: 0;
-}
-
-.error {
-  background: #f2dede;
-  border: 1px solid #ebccd1;
-  border-radius: 0.25rem;
-  color: #a94442;
 }
 
 .twoColumn {
@@ -105,8 +83,8 @@ h2 {
 
 button[type=submit] {
   background: white;
-  border-radius: 0.25rem;
   border: 1px solid black;
+  border-radius: 0.25rem;
   box-sizing: border-box;
   color: black;
   cursor: pointer;
@@ -120,14 +98,14 @@ button[type=submit] {
   width: 100%;
 }
 
-button:hover {
+button[type=submit]:hover {
   background-color: black;
   color: white;
   text-decoration: none;
 }
 
 mark {
-  background: rgba(255, 255, 0, 0.4);
+  background: #ffff99;
   font-style: italic;
   font-weight: bold;
 }
