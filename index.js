@@ -122,7 +122,7 @@ const header = `
 const footer = `
 <footer role=contentinfo>
   <a href=${accessHREF}>Access Agreement</a>
-  <a href=mailto:${constants.support}>E-Mail</a>
+  <a href=mailto:${constants.email}>E-Mail</a>
   <a href=/credits.txt>Credits</a>
   <p>an <a href=https://artlessdevices.com>Artless Devices</a> project</p>
 </footer>

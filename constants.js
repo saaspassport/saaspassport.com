@@ -4,7 +4,7 @@ export default {
   website: 'SaaS Passport',
   slogan: 'standard software as a service terms',
   twitter: 'saaspassport',
-  support: 'support@saaspassport.com',
+  email: 'contact@saaspassport.com',
   base: 'https://saaspassport.com',
   cookie: {
     name: 'agreed-to-access-terms',
