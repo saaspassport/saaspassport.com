@@ -133,6 +133,7 @@ const nav = `
 <nav role=navigation>
   <a href=/>About</a>
   <a href=${latestVersionHREF}>Latest Terms</a>
+  <a href=/versions>Versions</a>
 </nav>
 `
 
