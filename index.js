@@ -44,6 +44,7 @@ routes.set('/versions', serveVersionsIndex)
 routes.set('/versions/:version', requireCookie(serveVersion))
 routes.set('/contribute', serveContribute)
 routes.set('/thanks', serveThanks)
+routes.set('/contact', serveContact)
 
 if (process.env.NODE_ENV !== 'production') {
   routes.set('/internal-error', (request, response) => {
@@ -126,7 +127,7 @@ const header = `
 const footer = `
 <footer role=contentinfo>
   <a href=${accessHREF}>Access Agreement</a>
-  <a href=mailto:${constants.email}>E-Mail</a>
+  <a href=/contact>Contact</a>
   <a href=/credits.txt>Software Credits</a>
   <a href=/thanks>Thanks</a>
   <p>an <a href=https://artlessdevices.com>Artless Devices</a> project</p>
@@ -186,6 +187,15 @@ function serveThanks (request, response) {
     content: thanks,
     title: `${constants.name} Thanks`,
     heading: 'Thanks',
+    description: constants.slogan
+  })
+}
+
+function serveContact (request, response) {
+  serveStatic(request, response, {
+    content: contact,
+    title: 'Contact',
+    heading: 'Contact',
     description: constants.slogan
   })
 }
