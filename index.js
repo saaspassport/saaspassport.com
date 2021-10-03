@@ -37,6 +37,7 @@ routes.set('/pay', servePay)
 routes.set('/access', serveAccess)
 routes.set('/privacy', servePrivacy)
 routes.set('/stripe-webhook', serveStripeWebhook)
+routes.set('/versions', serveVersionsIndex)
 routes.set('/versions/:version', requireCookie(serveVersion))
 
 if (process.env.NODE_ENV !== 'production') {
@@ -241,6 +242,39 @@ function serveAccessForm (request, response) {
 
 function servePay (request, response) {
   serve404(request, response)
+}
+
+function serveVersionsIndex (request, response) {
+  if (request.method !== 'GET') return serve405(request, response)
+  response.setHeader('Content-Type', 'text/html')
+  readVersions((error, versions) => {
+    if (error) return serve500(request, response, error)
+    const title = `${constants.website} Versions`
+    response.end(html`
+<!doctype html>
+<html lang=en-US>
+  <head>
+    ${meta({
+      title: title,
+      description: constants.slogan
+    })}
+    <title>${escapeHTML(title)}</title>
+  </head>
+  <body>
+    ${header}
+    ${nav}
+    <main role=main>
+      <h2>Versions</h2>
+      <p>Each new version of SaaS Passports gets assigned a unique version number.  Once published, the contents of that version of SaaS Passport never change.  When we find ways to improve it, we publish a new version with a new, unique version number.  Old versions remain available here on saaspassport.com.</p>
+      <ul>
+        ${versions.map(v => `<li><a href=/versions/${escapeHTML(v)}>Version ${escapeHTML(v)}</a></li>`)}
+      </ul>
+    </main>
+    ${footer}
+  </body>
+</html>
+    `)
+  })
 }
 
 function serveVersion (request, response) {
@@ -459,14 +493,20 @@ function clearCookie (response) {
   setCookie(response, '', new Date('1970-01-01'))
 }
 
-function readLatestVersion (callback) {
+function readVersions (callback) {
   const directory = path.join(process.env.DIRECTORY, 'versions')
-  fs.readdir(directory, (error, versions) => {
+  fs.readdir(directory, (error, entries) => {
     if (error) return callback(error)
-    const latest = versions
+    const versions = entries
       .filter(semver.valid)
-      .filter(v => semver.prerelease(v) === null)
-      .sort(semver.rcompare)[0]
-    callback(null, latest)
+      .sort(semver.rcompare)
+    callback(null, versions)
+  })
+}
+
+function readLatestVersion (callback) {
+  readVersions((error, versions) => {
+    if (error) return callback(error)
+    callback(null, versions[0])
   })
 }
