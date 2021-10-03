@@ -24,8 +24,8 @@ const contribute = preloadMarkdown('contribute.md')
 const thanks = preloadMarkdown('thanks.md')
 const contact = preloadMarkdown('contact.md')
 const versionsBlurb = preloadMarkdown('versions.md')
-const accessTerms = (() => {
-  const { content, data: { version, title, description } } = grayMatter(fs.readFileSync('access.md', 'utf8'))
+const dealTerms = (() => {
+  const { content, data: { version, title, description } } = grayMatter(fs.readFileSync('deal.md', 'utf8'))
   return {
     version,
     title,
@@ -48,8 +48,8 @@ const routes = httpHash()
 
 routes.set('/', serveHomepage)
 routes.set('/pay', servePay)
-const accessHREF = '/access'
-routes.set(accessHREF, serveAccess)
+const dealHREF = '/deal'
+routes.set(dealHREF, serveDeal)
 routes.set('/privacy', servePrivacy)
 routes.set('/versions', serveVersionsIndex)
 routes.set('/versions/:version', requireCookie(serveVersion))
@@ -137,7 +137,7 @@ const header = `
 
 const footer = `
 <footer role=contentinfo>
-  <a href=${accessHREF}>Access</a>
+  <a href=${dealHREF}>Deal</a>
   <a href=/contact>Contact</a>
   <a href=/credits.txt>Software Credits</a>
   <a href=/thanks>Thanks</a>
@@ -234,7 +234,7 @@ function serveStatic (request, response, { title, heading, description, content 
   `)
 }
 
-function serveAccess (request, response) {
+function serveDeal (request, response) {
   const { method } = request
   if (method === 'POST') {
     let parser
@@ -250,17 +250,17 @@ function serveAccess (request, response) {
         }
       })
         .once('field', (name, value, truncated, encoding, mime) => {
-          if (name === 'version' && value === accessTerms.version) {
+          if (name === 'version' && value === dealTerms.version) {
             valid = true
           }
         })
         .once('finish', () => {
           if (valid) {
-            setCookie(response, accessTerms.version)
+            setCookie(response, dealTerms.version)
             const location = request.query.destination || latestVersionHREF
             serve303(request, response, location)
           } else {
-            serveAccessForm(request, response)
+            serveDealForm(request, response)
           }
         })
       request.pipe(parser)
@@ -269,19 +269,19 @@ function serveAccess (request, response) {
       response.end()
     }
   } else if (method === 'GET') {
-    serveAccessForm(request, response)
+    serveDealForm(request, response)
   } else {
     serve405(request, response)
   }
 }
 
-function serveAccessForm (request, response) {
+function serveDealForm (request, response) {
   doNotCache(response)
   if (
     request.headers.cookie &&
-    cookie.parse(request.headers.cookie)[constants.cookie.name] !== accessTerms.version
+    cookie.parse(request.headers.cookie)[constants.cookie.name] !== dealTerms.version
   ) clearCookie(response)
-  const title = `${accessTerms.title} — ${constants.name}`
+  const title = `${dealTerms.title} — ${constants.name}`
   response.setHeader('Content-Type', 'text/html')
   response.end(html`
 <!doctype html>
@@ -289,7 +289,7 @@ function serveAccessForm (request, response) {
   <head>
     ${meta({
       title,
-      description: accessTerms.description
+      description: dealTerms.description
     })}
     <title>${escapeHTML(title)}</title>
   </head>
@@ -298,11 +298,11 @@ function serveAccessForm (request, response) {
     ${nav}
     <main role=main>
       <form id=passwordForm method=post>
-        <input type=hidden name=version value=${accessTerms.version}>
-        <h2>${escapeHTML(accessTerms.title)}</h2>
-        <p id=version>These terms were last updated on ${formatTime(accessTerms.version)}.</p>
+        <input type=hidden name=version value=${dealTerms.version}>
+        <h2>${escapeHTML(dealTerms.title)}</h2>
+        <p id=version>These terms were last updated on ${formatTime(dealTerms.version)}.</p>
         <button id=agree type=submit>Agree and Continue</button>
-        ${accessTerms.content}
+        ${dealTerms.content}
         <button id=agree type=submit>Agree and Continue</button>
       </form>
     </main>
@@ -498,12 +498,12 @@ function requireCookie (handler) {
     const parsed = cookie.parse(header)
     const version = parsed[constants.cookie.name]
     if (!version) return redirect()
-    if (version !== accessTerms.version) return redirect()
+    if (version !== dealTerms.version) return redirect()
     handler(request, response)
 
     function redirect () {
       const query = querystring.stringify({ destination: request.url })
-      const location = accessHREF + '?' + query
+      const location = dealHREF + '?' + query
       serve303(request, response, location)
     }
   }
