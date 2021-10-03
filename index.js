@@ -14,26 +14,19 @@ import markdown from 'kemarkdown'
 import parseURL from 'url-parse'
 import path from 'path'
 import querystring from 'querystring'
-import readEnvironment from './environment.js'
 import runParallel from 'run-parallel'
 import semver from 'semver'
 import send from 'send'
 import simpleConcatLimit from 'simple-concat-limit'
 import yaml from 'js-yaml'
 
-const environment = readEnvironment()
-const stripe = new Stripe(environment.STRIPE_SECRET_KEY)
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
 
 const about = markdown(fs.readFileSync('about.md', 'utf8'))
 const agreement = (() => {
   const { content: markdown, data: { version, title, description } } = grayMatter(fs.readFileSync('agreement.md'))
   return { version, title, description, markdown }
 })()
-
-const versions = fs.readdirSync(path.join(environment.DIRECTORY, 'versions'))
-  .filter(semver.valid)
-  .sort(semver.rcompare)
-const latestVersion = versions.filter(v => semver.prerelease(v) === null)[0]
 
 // Router
 
@@ -46,7 +39,7 @@ routes.set('/privacy', servePrivacy)
 routes.set('/stripe-webhook', serveStripeWebhook)
 routes.set('/versions/:version', requireCookie(serveVersion))
 
-if (!environment.production) {
+if (process.env.NODE_ENV !== 'production') {
   routes.set('/internal-error', (request, response) => {
     serve500(request, response, new Error('test error'))
   })
@@ -232,7 +225,7 @@ function serveAgreeForm (request, response) {
         <h2>${escapeHTML(agreement.title)}</h2>
         <p id=version>Last Updated ${formatDate(agreement.version)}</p>
         ${markdown(agreement.markdown)}
-        <button type=submit>Agree</button>
+        <button id=agree type=submit>Agree</button>
       </form>
     </main>
     ${footer}
@@ -247,10 +240,12 @@ function servePay (request, response) {
 
 function serveVersion (request, response) {
   const { version } = request.parameters
-  request.log.info(request.parameters, 'parameters')
+  if (version === 'latest') {
+    return redirectToLatestVersion(request, response)
+  }
   runParallel({
     prompts: done => {
-      const file = path.join(environment.DIRECTORY, 'versions', version, 'prompts.yml')
+      const file = path.join(process.env.DIRECTORY, 'versions', version, 'prompts.yml')
       fs.readFile(file, 'utf8', (error, data) => {
         if (error) return done(error)
         let parsed
@@ -297,10 +292,17 @@ function serveVersion (request, response) {
 
   function readTemplate (basename) {
     return done => {
-      const file = path.join(environment.DIRECTORY, 'versions', version, `${basename}.md`)
+      const file = path.join(process.env.DIRECTORY, 'versions', version, `${basename}.md`)
       fs.readFile(file, 'utf8', done)
     }
   }
+}
+
+function redirectToLatestVersion (request, response) {
+  readLatestVersion((error, version) => {
+    if (error) return serve500(request, response, error)
+    serve302(request, response, `/versions/${version}`)
+  })
 }
 
 function servePrivacy (request, response) {
@@ -443,11 +445,23 @@ function setCookie (response, value, expires) {
       expires,
       httpOnly: true,
       sameSite: 'strict',
-      secure: environment.production
+      secure: process.env.NODE_ENV === 'production'
     })
   )
 }
 
 function clearCookie (response) {
   setCookie(response, '', new Date('1970-01-01'))
+}
+
+function readLatestVersion (callback) {
+  const directory = path.join(process.env.DIRECTORY, 'versions')
+  fs.readdir(directory, (error, versions) => {
+    if (error) return callback(error)
+    const latest = versions
+      .filter(semver.valid)
+      .filter(v => semver.prerelease(v) === null)
+      .sort(semver.rcompare)[0]
+    callback(null, latest)
+  })
 }

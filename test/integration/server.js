@@ -17,7 +17,7 @@ export default (callback, port) => {
   const logger = pino({}, fs.createWriteStream('test-server.log'))
   const addLoggers = pinoHTTP({ logger })
   let stripeListen
-  process.env.DIRECTORY = path.join(__dirname, '..', 'directory')
+  process.env.DIRECTORY = path.join('test', 'directory')
   const webServer = http.createServer((request, response) => {
     addLoggers(request, response)
     handle(request, response)
