@@ -11,6 +11,7 @@ import grayMatter from 'gray-matter'
 import html from './html.js'
 import httpHash from 'http-hash'
 import markdown from 'kemarkdown'
+import mustache from 'mustache'
 import parseURL from 'url-parse'
 import path from 'path'
 import querystring from 'querystring'
@@ -22,11 +23,17 @@ import yaml from 'js-yaml'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
 
-const about = markdown(fs.readFileSync('about.md', 'utf8'))
+const about = preloadMarkdown('about.md')
+const contribute = preloadMarkdown('thanks.md')
+const thanks = preloadMarkdown('thanks.md')
+const versionsBlurb = preloadMarkdown('versions.md')
 const accessTerms = (() => {
   const { content: markdown, data: { version, title, description } } = grayMatter(fs.readFileSync('access.md'))
   return { version, title, description, markdown }
 })()
+function preloadMarkdown (file) {
+  return replaceConstants(markdown(fs.readFileSync(file, 'utf8'), { unsafe: true }))
+}
 
 // Router
 
@@ -40,6 +47,8 @@ routes.set('/privacy', servePrivacy)
 routes.set('/stripe-webhook', serveStripeWebhook)
 routes.set('/versions', serveVersionsIndex)
 routes.set('/versions/:version', requireCookie(serveVersion))
+routes.set('/contribute', serveContribute)
+routes.set('/thanks', serveThanks)
 
 if (process.env.NODE_ENV !== 'production') {
   routes.set('/internal-error', (request, response) => {
@@ -78,7 +87,7 @@ export default (request, response) => {
 // Partials
 
 function meta ({
-  title = constants.website,
+  title = constants.name,
   description = constants.slogan
 }) {
   let returned = html`
@@ -101,7 +110,7 @@ function meta ({
 <meta name="og:title" content="${escapeHTML(title)}">
 <meta name="og:description" content="${escapeHTML(description)}">
 <meta name="og:image" content="${process.env.BASE_HREF}/logo-on-white-100.png">
-<meta name="og:site" content="${escapeHTML(constants.website)}">
+<meta name="og:site" content="${escapeHTML(constants.name)}">
     `
   }
   returned += html`
@@ -114,7 +123,7 @@ function meta ({
 const header = `
 <header role=banner>
   <a href=/><img src=/logo.svg id=logo alt=logo></a>
-  <h1>${constants.website}</h1>
+  <h1>${constants.name}</h1>
   <p class=slogan>${escapeHTML(constants.slogan)}</p>
 </header>
 `
@@ -123,7 +132,8 @@ const footer = `
 <footer role=contentinfo>
   <a href=${accessHREF}>Access Agreement</a>
   <a href=mailto:${constants.email}>E-Mail</a>
-  <a href=/credits.txt>Credits</a>
+  <a href=/credits.txt>Software Credits</a>
+  <a href=/thanks>Special Thanks</a>
   <p>an <a href=https://artlessdevices.com>Artless Devices</a> project</p>
 </footer>
 `
@@ -136,6 +146,7 @@ const nav = `
   <a href=${latestVersionHREF}>Latest Terms</a>
   <a href=/versions>Versions</a>
   <a href=/pay>Pay</a>
+  <a href=/contribute>Contribute</a>
 </nav>
 `
 
@@ -143,23 +154,66 @@ const nav = `
 
 function serveHomepage (request, response) {
   if (request.method !== 'GET') return serve405(request, response)
-  doNotCache(response)
   response.setHeader('Content-Type', 'text/html')
   response.end(html`
 <!doctype html>
 <html lang=en-US>
   <head>
     ${meta({
-      title: constants.website,
+      title: constants.name,
       description: constants.slogan
     })}
-    <title>${constants.website}</title>
+    <title>${constants.name}</title>
   </head>
   <body>
     ${header}
     ${nav}
     <main role=main>
       ${about}
+    </main>
+    ${footer}
+  </body>
+</html>
+  `)
+}
+
+function serveContribute (request, response) {
+  serveStatic(request, response, {
+    content: contribute,
+    title: `Contribute to ${constants.name}`,
+    heading: 'Contribute',
+    description: constants.slogan
+  })
+}
+
+function serveThanks (request, response) {
+  serveStatic(request, response, {
+    content: thanks,
+    title: `${constants.name} Thanks`,
+    heading: 'Thanks',
+    description: constants.slogan
+  })
+}
+
+function serveStatic (request, response, { title, heading, description, content }) {
+  if (request.method !== 'GET') return serve405(request, response)
+  response.setHeader('Content-Type', 'text/html')
+  response.end(html`
+<!doctype html>
+<html lang=en-US>
+  <head>
+    ${meta({
+      title: `Contribute to ${constants.name}`,
+      description: constants.slogan
+    })}
+    <title>Contribute to ${escapeHTML(constants.name)}</title>
+  </head>
+  <body>
+    ${header}
+    ${nav}
+    <main role=main>
+      <h2>${escapeHTML(heading)}</h2>
+      ${content}
     </main>
     ${footer}
   </body>
@@ -249,7 +303,7 @@ function serveVersionsIndex (request, response) {
   response.setHeader('Content-Type', 'text/html')
   readVersions((error, versions) => {
     if (error) return serve500(request, response, error)
-    const title = `${constants.website} Versions`
+    const title = `${constants.name} Versions`
     response.end(html`
 <!doctype html>
 <html lang=en-US>
@@ -265,7 +319,7 @@ function serveVersionsIndex (request, response) {
     ${nav}
     <main role=main>
       <h2>Versions</h2>
-      <p>Each new version of SaaS Passports gets assigned a unique version number.  Once published, the contents of that version of SaaS Passport never change.  When we find ways to improve it, we publish a new version with a new, unique version number.  Old versions remain available here on saaspassport.com.</p>
+      ${versionsBlurb}
       <ul>
         ${versions.map(v => `<li><a href=/versions/${escapeHTML(v)}>Version ${escapeHTML(v)}</a></li>`)}
       </ul>
@@ -306,10 +360,10 @@ function serveVersion (request, response) {
 <html lang=en-US>
   <head>
     ${meta({
-      title: `${constants.website} ${version}`,
+      title: `${constants.name} ${version}`,
       description: constants.slogan
     })}
-    <title>${constants.website}</title>
+    <title>${constants.name}</title>
   </head>
   <body>
     ${header}
@@ -511,4 +565,8 @@ function readLatestVersion (callback) {
     if (error) return callback(error)
     callback(null, versions[0])
   })
+}
+
+function replaceConstants (template) {
+  return mustache.render(template, constants)
 }

@@ -1,7 +1,8 @@
 // Global Constants
 
 export default {
-  website: 'SaaS Passport',
+  name: 'SaaS Passport',
+  website: 'saaspassport.com',
   slogan: 'standard software as a service terms',
   twitter: 'saaspassport',
   email: 'contact@saaspassport.com',

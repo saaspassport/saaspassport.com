@@ -11,6 +11,7 @@
     "http-hash": "^2.0.1",
     "js-yaml": "^4.1.0",
     "kemarkdown": "^3.0.0",
+    "mustache": "^4.2.0",
     "pino": "^6.13.3",
     "pino-http": "^5.8.0",
     "pino-papertrail": "^2.1.0",

@@ -1,0 +1,5 @@
+{{name}} would not be what it is today without the help of these people. They don’t necessarily endorse {{name}}. {{name}} wholeheartedly endorses them!
+
+<ul class="twoColumn">
+  <li>Heather Meeker</li>
+</ul>
