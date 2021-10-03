@@ -94,7 +94,7 @@ function server (callback) {
   const logger = pino({}, fs.createWriteStream('test-server.log'))
   const server = http.createServer()
   const addLoggers = pinoHTTP({ logger })
-  const tmpdir = path.join(os.tmpdir(), constants.website.toLowerCase() + '-test')
+  const tmpdir = path.join(os.tmpdir(), constants.name.toLowerCase() + '-test')
   fs.mkdtemp(tmpdir, (error, directory) => {
     if (error) throw error
     process.env.DIRECTORY = directory

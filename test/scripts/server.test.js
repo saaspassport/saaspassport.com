@@ -27,8 +27,8 @@ tap.test('server', test => {
           simpleConcat(response, (error, buffer) => {
             test.error(error, 'no concat error')
             test.ok(
-              buffer.toString().includes(`<h1>${constants.website}</h1>`),
-              `output includes <h1>${constants.website}</h1>`
+              buffer.toString().includes(`<h1>${constants.name}</h1>`),
+              `output includes <h1>${constants.name}</h1>`
             )
             server.kill(9)
             rimraf.sync(directory)

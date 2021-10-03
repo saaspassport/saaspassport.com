@@ -25,5 +25,5 @@ tap.test('parse homepage', test => {
 interactive('visit homepage', async ({ page, port, test }) => {
   await page.goto(`http://localhost:${port}`)
   const h1Text = await page.textContent('h1')
-  test.equal(h1Text, constants.website, `h1 says "${constants.website}"`)
+  test.equal(h1Text, constants.name, `h1 says "${constants.name}"`)
 })
