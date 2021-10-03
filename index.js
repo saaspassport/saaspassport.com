@@ -24,7 +24,7 @@ import yaml from 'js-yaml'
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
 
 const about = preloadMarkdown('about.md')
-const contribute = preloadMarkdown('thanks.md')
+const contribute = preloadMarkdown('contribute.md')
 const thanks = preloadMarkdown('thanks.md')
 const versionsBlurb = preloadMarkdown('versions.md')
 const accessTerms = (() => {
@@ -179,7 +179,7 @@ function serveHomepage (request, response) {
 
 function serveContribute (request, response) {
   serveStatic(request, response, {
-    content: contribute,
+    content: thanks,
     title: `Contribute to ${constants.name}`,
     heading: 'Contribute',
     description: constants.slogan
@@ -202,11 +202,8 @@ function serveStatic (request, response, { title, heading, description, content 
 <!doctype html>
 <html lang=en-US>
   <head>
-    ${meta({
-      title: `Contribute to ${constants.name}`,
-      description: constants.slogan
-    })}
-    <title>Contribute to ${escapeHTML(constants.name)}</title>
+    ${meta({ title, description })}
+    <title>${escapeHTML(title)}</title>
   </head>
   <body>
     ${header}
