@@ -139,7 +139,7 @@ const footer = `
 <footer role=contentinfo>
   <a href=${dealHREF}>Deal</a>
   <a href=/contact>Contact</a>
-  <a href=/credits.txt>Software Credits</a>
+  <a href=/credits.txt>Software</a>
   <a href=/thanks>Thanks</a>
   <p>an <a href=https://artlessdevices.com>Artless Devices</a> project</p>
 </footer>
