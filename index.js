@@ -152,7 +152,7 @@ const latestVersionHREF = '/versions/latest'
 const nav = `
 <nav role=navigation>
   <a href=/>About</a>
-  <a href=${latestVersionHREF}>Terms</a>
+  <a id=latest href=${latestVersionHREF}>Terms</a>
   <a href=/versions>Versions</a>
   <a href=/pay>Pay</a>
   <a href=/contribute>Contribute</a>
@@ -302,7 +302,7 @@ function serveDealForm (request, response) {
       <form id=passwordForm method=post>
         <input type=hidden name=version value="${dealTerms.version}">
         <p id=version>These terms were last updated ${escapeHTML(relativeDate(new Date(dealTerms.version)))}, on ${escapeHTML(formatTime(dealTerms.version))}.</p>
-        <button type=submit>Agree and Continue</button>
+        <button id=agree type=submit>Agree and Continue</button>
         ${dealTerms.content}
         <button type=submit>Agree and Continue</button>
       </form>

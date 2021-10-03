@@ -15,7 +15,8 @@ tap.test('server', test => {
         PATH: process.env.PATH,
         NODE_ENV: 'test',
         BASE_HREF: 'http://localhost:' + serverPort + '/',
-        DIRECTORY: directory
+        DIRECTORY: directory,
+        STRIPE_LINK: 'https://buy.stripe.com/test_fZe6rX93U2jB4mc289'
       }
     })
     server.stdout.once('data', () => {
