@@ -1,6 +1,6 @@
 ---
 title: Deal
-version: "2021-10-03T17:05Z"
+version: "2021-10-03T17:06Z"
 description: terms for access to and use of SaaS Passport
 ---
 
@@ -34,7 +34,7 @@ Don't republish our terms, especially on the open Internet. People who want our 
 
 ***If we somehow end up suing each out about anything related to {{name}}, we agree to take it to federal or state court in [Oakland, California](https://en.wikipedia.org/wiki/Oakland,_California). California law will govern.***
 
-We know you're not all in Oakland. But we can't really know what these terms mean, or whether they'll work, without pinning down what law applies. There are also a lot of you, everywhere, and just one of us. If a thousand people could sue us in a thousand different places, we could end up spending all our precious fees on planes, lawyers, and translators. And then some.
+We know you're not all in Oakland. But we can't really know what these terms mean, or whether they'll work, without pinning down what law applies. There are also a lot of you, everywhere, and just one of us. If you could sue us in a thousand different places, we could end up spending all our precious closing fees on plane tickets, lawyers, and translators. And then some.
 
 ### The End
 
