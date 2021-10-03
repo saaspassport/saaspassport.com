@@ -67,6 +67,10 @@ a[href] {
   text-decoration: none;
 }
 
+nav[role=navigation] a[href]:visited {
+  color: blue;
+}
+
 a[href]:hover {
   text-decoration: underline;
 }
