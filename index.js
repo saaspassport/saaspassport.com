@@ -133,7 +133,7 @@ const footer = `
   <a href=${accessHREF}>Access Agreement</a>
   <a href=mailto:${constants.email}>E-Mail</a>
   <a href=/credits.txt>Software Credits</a>
-  <a href=/thanks>Special Thanks</a>
+  <a href=/thanks>Thanks</a>
   <p>an <a href=https://artlessdevices.com>Artless Devices</a> project</p>
 </footer>
 `
