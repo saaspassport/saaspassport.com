@@ -23,7 +23,7 @@ import yaml from 'js-yaml'
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
 
 const about = markdown(fs.readFileSync('about.md', 'utf8'))
-const agreement = (() => {
+const accessAgreement = (() => {
   const { content: markdown, data: { version, title, description } } = grayMatter(fs.readFileSync('agreement.md'))
   return { version, title, description, markdown }
 })()
@@ -120,7 +120,7 @@ const header = `
 const footer = `
 <footer role=contentinfo>
   <a class=spaced href=/>About</a>
-  <a class=spaced href=/agree>Agreement</a>
+  <a class=spaced href=/agree>Access Agreement</a>
   <a class=spaced href=mailto:${constants.support}>E-Mail</a>
   <a class=spaced href=/credits.txt>Credits</a>
 </footer>
@@ -175,7 +175,7 @@ function serveAgree (request, response) {
         }
       })
         .once('field', (name, value, truncated, encoding, mime) => {
-          if (name === 'version' && value === agreement.version) {
+          if (name === 'version' && value === accessAgreement.version) {
             valid = true
           }
         })
@@ -184,7 +184,7 @@ function serveAgree (request, response) {
             const expires = new Date(
               Date.now() + (30 * 24 * 60 * 60 * 1000)
             )
-            setCookie(response, agreement.version, expires)
+            setCookie(response, accessAgreement.version, expires)
             const location = request.query.destination || '/'
             serve303(request, response, location)
           } else {
@@ -212,19 +212,19 @@ function serveAgreeForm (request, response) {
 <html lang=en-US>
   <head>
     ${meta({
-      title: agreement.title,
-      description: agreement.description
+      title: accessAgreement.title,
+      description: accessAgreement.description
     })}
-    <title>${escapeHTML(agreement.title)}</title>
+    <title>${escapeHTML(accessAgreement.title)}</title>
   </head>
   <body>
     ${header}
     <main role=main>
       <form id=passwordForm method=post>
-        <input type=hidden name=version value=${agreement.version}>
-        <h2>${escapeHTML(agreement.title)}</h2>
-        <p id=version>Last Updated ${formatDate(agreement.version)}</p>
-        ${markdown(agreement.markdown)}
+        <input type=hidden name=version value=${accessAgreement.version}>
+        <h2>${escapeHTML(accessAgreement.title)}</h2>
+        <p id=version>Last Updated ${formatDate(accessAgreement.version)}</p>
+        ${markdown(accessAgreement.markdown)}
         <button id=agree type=submit>Agree</button>
       </form>
     </main>
@@ -426,7 +426,7 @@ function requireCookie (handler) {
     const parsed = cookie.parse(header)
     const version = parsed[constants.cookie]
     if (!version) return redirect()
-    if (version !== agreement.version) return redirect()
+    if (version !== accessAgreement.version) return redirect()
     handler(request, response)
 
     function redirect () {

@@ -1,7 +1,7 @@
 ---
-title: SaaS Passport Agreement
+title: SaaS Passport Access Agreement
 version: "2021-10-02"
-description: for use of SaaS Passport
+description: terms for access to and use of SaaS Passport
 ---
 
 TODO
