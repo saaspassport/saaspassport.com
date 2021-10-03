@@ -29,7 +29,6 @@ const routes = httpHash()
 routes.set('/', serveHomepage)
 routes.set('/pay', servePay)
 routes.set('/agree', serveAgree)
-routes.set('/agreement', serveAgreement)
 routes.set('/privacy', servePrivacy)
 routes.set('/stripe-webhook', serveStripeWebhook)
 routes.set('/version/:version', requireCookie(serveVersion))
@@ -115,7 +114,7 @@ const header = `
 const footer = `
 <footer role=contentinfo>
   <a class=spaced href=/>About</a>
-  <a class=spaced href=/agreement>Agreement</a>
+  <a class=spaced href=/agree>Agreement</a>
   <a class=spaced href=mailto:${constants.support}>E-Mail</a>
   <a class=spaced href=/credits.txt>Credits</a>
 </footer>
@@ -208,15 +207,20 @@ function serveAgreeForm (request, response) {
 <!doctype html>
 <html lang=en-US>
   <head>
-    ${meta({})}
-    <title>SaaS Passport Agreement</title>
+    ${meta({
+      title: agreement.data.title,
+      description: agreement.data.description
+    })}
+    <title>${escapeHTML(agreement.data.title)}</title>
   </head>
   <body>
     ${header}
     <main role=main>
-      <h2>Agreement</h2>
       <form id=passwordForm method=post>
         <input type=hidden name=${agreeForm.name} value=${agreeForm.value}>
+        <h2>${escapeHTML(agreement.data.title)}</h2>
+        <p id=version>Version ${escapeHTML(agreement.data.version)}</p>
+        ${markdown(agreement.content)}
         <button type=submit>Agree</button>
       </form>
     </main>
@@ -236,41 +240,6 @@ function serveVersion (request, response) {
 
 function servePrivacy (request, response) {
   serve404(request, response)
-}
-
-function serveStaticPage (request, response, slug) {
-  fs.readFile(
-    path.join('pages', `${slug}.md`),
-    'utf8',
-    (error, read) => {
-      if (error) {
-        if (error.code === 'ENOENT') {
-          return serve404(request, response)
-        }
-        return serve500(request, response, error)
-      }
-      const { content, data: { title, summary } } = grayMatter(read)
-      response.setHeader('Content-Type', 'text/html')
-      response.end(html`
-<!doctype html>
-<html lang=en-US>
-  <head>
-    ${meta({ title, description: summary })}
-    <title>${escapeHTML(title)}</title>
-  </head>
-  <body>
-    ${nav}
-    ${header}
-    <main role=main>
-      <h1>${escapeHTML(title)}</h1>
-      ${markdown(content, { unsafe: true })}
-    </main>
-    ${footer}
-  </body>
-</html>
-      `)
-    }
-  )
 }
 
 function serveStripeWebhook (request, response) {
