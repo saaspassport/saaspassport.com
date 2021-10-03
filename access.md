@@ -1,5 +1,5 @@
 ---
-title: SaaS Passport Access Agreement
+title: SaaS Passport Access Terms
 version: "2021-10-03T03:45Z"
 description: terms for access to and use of SaaS Passport
 ---

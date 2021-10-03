@@ -23,8 +23,8 @@ import yaml from 'js-yaml'
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
 
 const about = markdown(fs.readFileSync('about.md', 'utf8'))
-const accessAgreement = (() => {
-  const { content: markdown, data: { version, title, description } } = grayMatter(fs.readFileSync('agreement.md'))
+const accessTerms = (() => {
+  const { content: markdown, data: { version, title, description } } = grayMatter(fs.readFileSync('access.md'))
   return { version, title, description, markdown }
 })()
 
@@ -180,7 +180,7 @@ function serveAccess (request, response) {
         }
       })
         .once('field', (name, value, truncated, encoding, mime) => {
-          if (name === 'version' && value === accessAgreement.version) {
+          if (name === 'version' && value === accessTerms.version) {
             valid = true
           }
         })
@@ -189,7 +189,7 @@ function serveAccess (request, response) {
             const expires = new Date(
               Date.now() + (30 * 24 * 60 * 60 * 1000)
             )
-            setCookie(response, accessAgreement.version, expires)
+            setCookie(response, accessTerms.version, expires)
             const location = request.query.destination || latestVersionHREF
             serve303(request, response, location)
           } else {
@@ -217,20 +217,20 @@ function serveAccessForm (request, response) {
 <html lang=en-US>
   <head>
     ${meta({
-      title: accessAgreement.title,
-      description: accessAgreement.description
+      title: accessTerms.title,
+      description: accessTerms.description
     })}
-    <title>${escapeHTML(accessAgreement.title)}</title>
+    <title>${escapeHTML(accessTerms.title)}</title>
   </head>
   <body>
     ${header}
     ${nav}
     <main role=main>
       <form id=passwordForm method=post>
-        <input type=hidden name=version value=${accessAgreement.version}>
-        <h2>${escapeHTML(accessAgreement.title)}</h2>
-        <p id=version>Last Updated ${formatTime(accessAgreement.version)}</p>
-        ${markdown(accessAgreement.markdown)}
+        <input type=hidden name=version value=${accessTerms.version}>
+        <h2>${escapeHTML(accessTerms.title)}</h2>
+        <p id=version>Last Updated ${formatTime(accessTerms.version)}</p>
+        ${markdown(accessTerms.markdown)}
         <button id=agree type=submit>Agree</button>
       </form>
     </main>
