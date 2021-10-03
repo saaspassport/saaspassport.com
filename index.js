@@ -126,10 +126,12 @@ const footer = `
 </footer>
 `
 
+const latestVersionHREF = '/versions/latest'
+
 const nav = `
 <nav role=navigation>
   <a href=/>About</a>
-  <a href=/versions/latest>Latest Terms</a>
+  <a href=${latestVersionHREF}>Latest Terms</a>
 </nav>
 `
 
@@ -187,7 +189,7 @@ function serveAccess (request, response) {
               Date.now() + (30 * 24 * 60 * 60 * 1000)
             )
             setCookie(response, accessAgreement.version, expires)
-            const location = request.query.destination || '/'
+            const location = request.query.destination || latestVersionHREF
             serve303(request, response, location)
           } else {
             serveAccessForm(request, response)
