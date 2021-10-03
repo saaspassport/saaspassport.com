@@ -15,9 +15,7 @@ tap.test('server', test => {
         PATH: process.env.PATH,
         NODE_ENV: 'test',
         BASE_HREF: 'http://localhost:' + serverPort + '/',
-        DIRECTORY: directory,
-        STRIPE_PUBLISHABLE_KEY: process.env.STRIPE_PUBLISHABLE_KEY,
-        STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY
+        DIRECTORY: directory
       }
     })
     server.stdout.once('data', () => {

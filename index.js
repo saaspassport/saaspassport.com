@@ -1,6 +1,5 @@
 // HTTP Server Request Handler
 import Busboy from 'busboy'
-import Stripe from 'stripe'
 import constants from './constants.js'
 import cookie from 'cookie'
 import doNotCache from 'do-not-cache'
@@ -18,10 +17,7 @@ import querystring from 'querystring'
 import runParallel from 'run-parallel'
 import semver from 'semver'
 import send from 'send'
-import simpleConcatLimit from 'simple-concat-limit'
 import yaml from 'js-yaml'
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
 
 const about = preloadMarkdown('about.md')
 const contribute = preloadMarkdown('contribute.md')
@@ -44,7 +40,6 @@ routes.set('/pay', servePay)
 const accessHREF = '/access'
 routes.set(accessHREF, serveAccess)
 routes.set('/privacy', servePrivacy)
-routes.set('/stripe-webhook', serveStripeWebhook)
 routes.set('/versions', serveVersionsIndex)
 routes.set('/versions/:version', requireCookie(serveVersion))
 routes.set('/contribute', serveContribute)
@@ -397,45 +392,6 @@ function redirectToLatestVersion (request, response) {
 
 function servePrivacy (request, response) {
   serve404(request, response)
-}
-
-function serveStripeWebhook (request, response) {
-  simpleConcatLimit(request, 32768, (error, buffer) => {
-    if (error) {
-      request.log.error(error)
-      response.statusCode = 413
-      return response.end()
-    }
-
-    let event
-    try {
-      event = stripe.webhooks.constructEvent(
-        // constructEvent wants the raw, unparsed JSON request body.
-        buffer.toString(),
-        request.headers['stripe-signature'],
-        process.env.STRIPE_WEBHOOK_SECRET
-      )
-    } catch (error) {
-      request.log.warn(error)
-      response.statusCode = 400
-      return response.end()
-    }
-
-    const { id, type } = event
-    request.log.info({ id, type }, 'Stripe webhook event')
-
-    rejectEvent()
-  })
-
-  function acceptEvent () {
-    response.statusCode = 200
-    response.end()
-  }
-
-  function rejectEvent () {
-    response.statusCode = 400
-    response.end()
-  }
 }
 
 function serve404 (request, response) {

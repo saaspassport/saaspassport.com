@@ -21,8 +21,6 @@
     "semver": "^7.3.5",
     "send": "^0.17.1",
     "simple-concat": "^1.0.1",
-    "simple-concat-limit": "^2.0.3",
-    "stripe": "^8.178.0",
     "toobusy-js": "^0.5.1",
     "url-parse": "^1.5.3"
   },
