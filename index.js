@@ -29,10 +29,10 @@ const routes = httpHash()
 routes.set('/', serveHomepage)
 routes.set('/pay', servePay)
 routes.set('/agree', serveAgree)
-routes.set('/agreement', serveTerms)
+routes.set('/agreement', serveAgreement)
 routes.set('/privacy', servePrivacy)
 routes.set('/stripe-webhook', serveStripeWebhook)
-routes.set('/version/:version', requireCookie(serveTerms))
+routes.set('/version/:version', requireCookie(serveVersion))
 
 if (!environment.production) {
   routes.set('/internal-error', (request, response) => {
@@ -121,7 +121,7 @@ const header = `
 const footer = `
 <footer role=contentinfo>
   <a class=spaced href=/about>About</a>
-  <a class=spaced href=/terms>Terms of Service</a>
+  <a class=spaced href=/agreement>Agreement</a>
   <a class=spaced href=mailto:${constants.support}>E-Mail</a>
   <a class=spaced href=/credits.txt>Credits</a>
 </footer>
@@ -236,7 +236,33 @@ function servePay (request, response) {
   serve404(request, response)
 }
 
-function serveTerms (request, response) {
+function serveAgreement (request, response) {
+  response.setHeader('Content-Type', 'text/html')
+  response.end(html`
+<!doctype html>
+<html lang=en-US>
+  <head>
+    ${meta({
+      title: agreement.data.title,
+      description: agreement.data.description
+    })}
+    <title>${escapeHTML(agreement.data.title)}</title>
+  </head>
+  <body>
+    ${nav}
+    ${header}
+    <main role=main>
+      <h2>${escapeHTML(agreement.data.title)}</h2>
+      <p id=version>Version ${escapeHTML(agreement.data.version)}</p>
+      ${markdown(agreement.content)}
+    </main>
+    ${footer}
+  </body>
+</html>
+  `)
+}
+
+function serveVersion (request, response) {
   serve404(request, response)
 }
 
