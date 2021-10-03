@@ -456,15 +456,12 @@ function serve302 (request, response, location) {
   response.end()
 }
 
-const cookieName = 'agreed-to-access-terms'
-const cookieLifetimeDays = 30
-
 function requireCookie (handler) {
   return (request, response) => {
     const header = request.headers.cookie
     if (!header) return redirect()
     const parsed = cookie.parse(header)
-    const version = parsed[cookieName]
+    const version = parsed[constants.cookie.name]
     if (!version) return redirect()
     if (version !== accessTerms.version) return redirect()
     handler(request, response)
@@ -480,11 +477,11 @@ function requireCookie (handler) {
 
 function setCookie (response, value) {
   const expires = new Date(
-    Date.now() + (cookieLifetimeDays * 24 * 60 * 60 * 1000)
+    Date.now() + (constants.cookie.days * 24 * 60 * 60 * 1000)
   )
   response.setHeader(
     'Set-Cookie',
-    cookie.serialize(cookieName, value, {
+    cookie.serialize(constants.cookie.name, value, {
       expires,
       httpOnly: true,
       sameSite: 'strict',

@@ -6,5 +6,9 @@ export default {
   twitter: 'saaspassport',
   support: 'support@saaspassport.com',
   base: 'https://saaspassport.com',
-  fee: 10
+  fee: 10,
+  cookie: {
+    name: 'agreed-to-access-terms',
+    days: 30
+  }
 }
