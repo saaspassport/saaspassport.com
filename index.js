@@ -11,7 +11,6 @@ import html from './html.js'
 import httpHash from 'http-hash'
 import markdown from 'kemarkdown'
 import parseURL from 'url-parse'
-import path from 'path'
 import querystring from 'querystring'
 import readEnvironment from './environment.js'
 import send from 'send'
@@ -152,11 +151,6 @@ function serveHomepage (request, response) {
   `)
 }
 
-const agreeForm = {
-  name: 'terms',
-  value: 'accepted'
-}
-
 function serveAgree (request, response) {
   const { method } = request
   if (method === 'POST') {
@@ -166,14 +160,14 @@ function serveAgree (request, response) {
       parser = new Busboy({
         headers: request.headers,
         limits: {
-          fieldNameSize: agreeForm.name.length,
+          fieldNameSize: 'version'.length,
           fields: 1,
-          fieldSizeLimit: agreeForm.value.length,
+          fieldSizeLimit: 'xx.yy.zz'.length,
           parts: 1
         }
       })
         .once('field', (name, value, truncated, encoding, mime) => {
-          if (name === agreeForm.name && value === agreeForm.value) {
+          if (name === 'version' && value === agreement.data.version) {
             valid = true
           }
         })
@@ -217,7 +211,7 @@ function serveAgreeForm (request, response) {
     ${header}
     <main role=main>
       <form id=passwordForm method=post>
-        <input type=hidden name=${agreeForm.name} value=${agreeForm.value}>
+        <input type=hidden name=version value=${agreement.data.version}>
         <h2>${escapeHTML(agreement.data.title)}</h2>
         <p id=version>Version ${escapeHTML(agreement.data.version)}</p>
         ${markdown(agreement.content)}
