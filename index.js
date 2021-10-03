@@ -19,6 +19,7 @@ import simpleConcatLimit from 'simple-concat-limit'
 const environment = readEnvironment()
 const stripe = new Stripe(environment.STRIPE_SECRET_KEY)
 
+const about = markdown(fs.readFileSync('about.md', 'utf8'))
 const agreement = grayMatter(fs.readFileSync('agreement.md'))
 
 // Router
@@ -144,6 +145,7 @@ function serveHomepage (request, response) {
     ${nav}
     ${header}
     <main role=main>
+      ${about}
     </main>
     ${footer}
   </body>
