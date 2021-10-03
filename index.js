@@ -3,6 +3,7 @@ import Busboy from 'busboy'
 import Stripe from 'stripe'
 import constants from './constants.js'
 import cookie from 'cookie'
+import formatDate from './format-date.js'
 import doNotCache from 'do-not-cache'
 import escapeHTML from 'escape-html'
 import fs from 'fs'
@@ -20,7 +21,11 @@ const environment = readEnvironment()
 const stripe = new Stripe(environment.STRIPE_SECRET_KEY)
 
 const about = markdown(fs.readFileSync('about.md', 'utf8'))
-const agreement = grayMatter(fs.readFileSync('agreement.md'))
+const agreement = (() => {
+  const { content: markdown, data: { version, title, description } } = grayMatter(fs.readFileSync('agreement.md'))
+  return { version, title, description, markdown }
+})()
+console.log(agreement)
 
 // Router
 
@@ -164,12 +169,12 @@ function serveAgree (request, response) {
         limits: {
           fieldNameSize: 'version'.length,
           fields: 1,
-          fieldSizeLimit: 'xx.yy.zz'.length,
+          fieldSizeLimit: 'YY-MM-DD'.length,
           parts: 1
         }
       })
         .once('field', (name, value, truncated, encoding, mime) => {
-          if (name === 'version' && value === agreement.data.version) {
+          if (name === 'version' && value === agreement.version) {
             valid = true
           }
         })
@@ -178,7 +183,7 @@ function serveAgree (request, response) {
             const expires = new Date(
               Date.now() + (30 * 24 * 60 * 60 * 1000)
             )
-            setCookie(response, agreement.data.version, expires)
+            setCookie(response, agreement.version, expires)
             const location = request.parsed.query.destination || '/'
             serve303(request, response, location)
           } else {
@@ -204,19 +209,19 @@ function serveAgreeForm (request, response) {
 <html lang=en-US>
   <head>
     ${meta({
-      title: agreement.data.title,
-      description: agreement.data.description
+      title: agreement.title,
+      description: agreement.description
     })}
-    <title>${escapeHTML(agreement.data.title)}</title>
+    <title>${escapeHTML(agreement.title)}</title>
   </head>
   <body>
     ${header}
     <main role=main>
       <form id=passwordForm method=post>
-        <input type=hidden name=version value=${agreement.data.version}>
-        <h2>${escapeHTML(agreement.data.title)}</h2>
-        <p id=version>Version ${escapeHTML(agreement.data.version)}</p>
-        ${markdown(agreement.content)}
+        <input type=hidden name=version value=${agreement.version}>
+        <h2>${escapeHTML(agreement.title)}</h2>
+        <p id=version>Last Updated ${formatDate(agreement.version)}</p>
+        ${markdown(agreement.markdown)}
         <button type=submit>Agree</button>
       </form>
     </main>
@@ -355,7 +360,7 @@ function requireCookie (request, response, handler) {
     const parsed = cookie.parse(header)
     const version = parsed[constants.cookie]
     if (!version) return redirect()
-    if (version !== agreement.data.version) return redirect()
+    if (version !== agreement.version) return redirect()
     handler(request, response)
   }
 
