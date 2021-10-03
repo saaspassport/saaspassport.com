@@ -35,7 +35,7 @@ const routes = httpHash()
 
 routes.set('/', serveHomepage)
 routes.set('/pay', servePay)
-routes.set('/agree', serveAgree)
+routes.set('/access', serveAccess)
 routes.set('/privacy', servePrivacy)
 routes.set('/stripe-webhook', serveStripeWebhook)
 routes.set('/versions/:version', requireCookie(serveVersion))
@@ -120,7 +120,7 @@ const header = `
 
 const footer = `
 <footer role=contentinfo>
-  <a href=/agree>Access Agreement</a>
+  <a href=/access>Access Agreement</a>
   <a href=mailto:${constants.support}>E-Mail</a>
   <a href=/credits.txt>Credits</a>
   <p>an <a href=https://artlessdevices.com>Artless Devices</a> project</p>
@@ -162,7 +162,7 @@ function serveHomepage (request, response) {
   `)
 }
 
-function serveAgree (request, response) {
+function serveAccess (request, response) {
   const { method } = request
   if (method === 'POST') {
     let parser
@@ -191,7 +191,7 @@ function serveAgree (request, response) {
             const location = request.query.destination || '/'
             serve303(request, response, location)
           } else {
-            serveAgreeForm(request, response)
+            serveAccessForm(request, response)
           }
         })
       request.pipe(parser)
@@ -200,13 +200,13 @@ function serveAgree (request, response) {
       response.end()
     }
   } else if (method === 'GET') {
-    serveAgreeForm(request, response)
+    serveAccessForm(request, response)
   } else {
     serve405(request, response)
   }
 }
 
-function serveAgreeForm (request, response) {
+function serveAccessForm (request, response) {
   doNotCache(response)
   clearCookie(response)
   response.setHeader('Content-Type', 'text/html')
@@ -434,7 +434,7 @@ function requireCookie (handler) {
     handler(request, response)
 
     function redirect () {
-      const location = '/agree?' + querystring.stringify({
+      const location = '/access?' + querystring.stringify({
         destination: request.url
       })
       serve303(request, response, location)
