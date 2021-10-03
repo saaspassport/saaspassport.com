@@ -25,6 +25,7 @@ export default (callback, port) => {
   webServer.listen(port, function () {
     const port = this.address().port
     process.env.BASE_HREF = 'http://localhost:' + port
+    process.env.STRIPE_LINK = 'https://buy.stripe.com/test_fZe6rX93U2jB4mc289'
     const environment = readEnvironment()
     if (environment.missing.length !== 0) {
       cleanup()
