@@ -34,7 +34,10 @@ const dealTerms = (() => {
     content: preprocessMarkdown(content)
   }
 })()
-dealTerms.version = new Date(spawnSync('git', ['log', '-1', '--format="%ad"', '--date=iso-strict', '--', 'deal.md'], { env: { PATH: process.env.PATH }, encoding: 'utf8', shell: true }).stdout.trim()).toISOString()
+dealTerms.version = (() => {
+  const authorDate = spawnSync('git', ['log', '-1', '--format="%ad"', '--date=unix', '--', 'deal.md'], { env: { PATH: process.env.PATH }, encoding: 'utf8', shell: true }).stdout.trim()
+  return new Date(parseInt(authorDate) * 1000).toISOString()
+})()
 
 function preloadMarkdown (file) {
   return preprocessMarkdown(fs.readFileSync(file, 'utf8'))
