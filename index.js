@@ -22,13 +22,24 @@ import yaml from 'js-yaml'
 const about = preloadMarkdown('about.md')
 const contribute = preloadMarkdown('contribute.md')
 const thanks = preloadMarkdown('thanks.md')
+const contact = preloadMarkdown('contact.md')
 const versionsBlurb = preloadMarkdown('versions.md')
 const accessTerms = (() => {
-  const { content: markdown, data: { version, title, description } } = grayMatter(fs.readFileSync('access.md'))
-  return { version, title, description, markdown }
+  const { content, data: { version, title, description } } = grayMatter(fs.readFileSync('access.md', 'utf8'))
+  return {
+    version,
+    title,
+    description,
+    content: preprocessMarkdown(content)
+  }
 })()
+
 function preloadMarkdown (file) {
-  return replaceConstants(markdown(fs.readFileSync(file, 'utf8'), { unsafe: true }))
+  return preprocessMarkdown(fs.readFileSync(file, 'utf8'))
+}
+
+function preprocessMarkdown (text) {
+  return replaceConstants(markdown(text, { unsafe: true }))
 }
 
 // Router
@@ -126,7 +137,7 @@ const header = `
 
 const footer = `
 <footer role=contentinfo>
-  <a href=${accessHREF}>Access Agreement</a>
+  <a href=${accessHREF}>Access</a>
   <a href=/contact>Contact</a>
   <a href=/credits.txt>Software Credits</a>
   <a href=/thanks>Thanks</a>
@@ -270,16 +281,17 @@ function serveAccessForm (request, response) {
     request.headers.cookie &&
     cookie.parse(request.headers.cookie)[constants.cookie.name] !== accessTerms.version
   ) clearCookie(response)
+  const title = `${accessTerms.title} — ${constants.name}`
   response.setHeader('Content-Type', 'text/html')
   response.end(html`
 <!doctype html>
 <html lang=en-US>
   <head>
     ${meta({
-      title: accessTerms.title,
+      title,
       description: accessTerms.description
     })}
-    <title>${escapeHTML(accessTerms.title)}</title>
+    <title>${escapeHTML(title)}</title>
   </head>
   <body>
     ${header}
@@ -289,8 +301,9 @@ function serveAccessForm (request, response) {
         <input type=hidden name=version value=${accessTerms.version}>
         <h2>${escapeHTML(accessTerms.title)}</h2>
         <p id=version>These terms were last updated on ${formatTime(accessTerms.version)}.</p>
-        ${markdown(accessTerms.markdown)}
-        <button id=agree type=submit>Agree</button>
+        <button id=agree type=submit>Agree and Continue</button>
+        ${accessTerms.content}
+        <button id=agree type=submit>Agree and Continue</button>
       </form>
     </main>
     ${footer}
