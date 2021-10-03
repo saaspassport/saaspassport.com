@@ -111,7 +111,7 @@ function meta ({
 <meta name="twitter:card" content="summary">
 <meta name="twitter:description" content="${escapeHTML(description)}">
 <meta name="twitter:image" content="${process.env.BASE_HREF}/logo-on-white-100.png">
-<meta name="twitter:site" content="@${constants.twitter}">
+<meta name="twitter:site" content="@${escapeHTML(constants.twitter)}">
 <meta name="twitter:title" content="${escapeHTML(title)}">
 <meta name="og:type" content="website">
 <meta name="og:title" content="${escapeHTML(title)}">
@@ -130,7 +130,7 @@ function meta ({
 const header = `
 <header role=banner>
   <a href=/><img src=/logo.svg id=logo alt=logo></a>
-  <h1>${constants.name}</h1>
+  <h1>${escapeHTML(constants.name)}</h1>
   <p class=slogan>${escapeHTML(constants.slogan)}</p>
 </header>
 `
@@ -170,7 +170,7 @@ function serveHomepage (request, response) {
       title: constants.name,
       description: constants.slogan
     })}
-    <title>${constants.name}</title>
+    <title>${escapeHTML(constants.name)}</title>
   </head>
   <body>
     ${header}
@@ -298,8 +298,8 @@ function serveDealForm (request, response) {
     ${nav}
     <main role=main>
       <form id=passwordForm method=post>
-        <input type=hidden name=version value=${dealTerms.version}>
-        <p id=version>These terms were last updated on ${formatTime(dealTerms.version)}.</p>
+        <input type=hidden name=version value=${escapeHTML(dealTerms.version)}>
+        <p id=version>These terms were last updated on ${escapeHTML(formatTime(dealTerms.version))}.</p>
         <button id=agree type=submit>Agree and Continue</button>
         ${dealTerms.content}
         <button id=agree type=submit>Agree and Continue</button>
@@ -380,13 +380,13 @@ function serveVersion (request, response) {
       title: `${constants.name} ${version}`,
       description: constants.slogan
     })}
-    <title>${constants.name}</title>
+    <title>${escapeHTML(constants.name)}</title>
   </head>
   <body>
     ${header}
     ${nav}
     <main role=main>
-      <h2>Version ${version}</h2>
+      <h2>Version ${escapeHTML(version)}</h2>
       <h3>Prompts</h3>
       <pre>${escapeHTML(results.prompts)}</pre>
       <h3>Order</h3>
@@ -428,13 +428,13 @@ function serve404 (request, response) {
 <html lang=en-US>
   <head>
     ${meta({})}
-    <title>${title}</title>
+    <title>${escapeHTML(title)}</title>
   </head>
   <body>
     ${header}
     ${nav}
     <main role=main>
-      <h2>${title}</h2>
+      <h2>${escapeHTML(title)}</h2>
       <p>The page you tried to visit doesn’t exist on this site.</p>
     </main>
     ${footer}
@@ -453,15 +453,15 @@ function serve500 (request, response, error) {
 <html lang=en-US>
   <head>
     ${meta({})}
-    <title>${title}</title>
+    <title>${escapeHTML(title)}</title>
   </head>
   <body>
     <main role=main>
-      <h1>${title}</h1>
+      <h1>${escapeHTML(title)}</h1>
       <p>The server ran into an error.</p>
       <p>
         If you'd like, you can
-        <a href=mailto:${constants.support}>e-mail support</a>,
+        <a href=mailto:${escapeHTML(constants.email)}>e-mail support</a>,
         pasting in this unique support number:
         <code>${escapeHTML(request.id)}</code>
       </p>
