@@ -2,4 +2,5 @@
 
 <ul class="twoColumn">
   <li>Heather Meeker</li>
+  <li>Kate Downing</li>
 </ul>
