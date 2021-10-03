@@ -458,14 +458,16 @@ function serve302 (request, response, location) {
   response.end()
 }
 
+const cookieName = 'agreed-to-access-terms'
+
 function requireCookie (handler) {
   return (request, response) => {
     const header = request.headers.cookie
     if (!header) return redirect()
     const parsed = cookie.parse(header)
-    const version = parsed[constants.cookie]
+    const version = parsed[cookieName]
     if (!version) return redirect()
-    if (version !== accessAgreement.version) return redirect()
+    if (version !== accessTerms.version) return redirect()
     handler(request, response)
 
     function redirect () {
@@ -480,7 +482,7 @@ function requireCookie (handler) {
 function setCookie (response, value, expires) {
   response.setHeader(
     'Set-Cookie',
-    cookie.serialize(constants.cookie, value, {
+    cookie.serialize(cookieName, value, {
       expires,
       httpOnly: true,
       sameSite: 'strict',
