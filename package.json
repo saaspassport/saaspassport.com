@@ -11,7 +11,9 @@
     "pino": "^6.13.3",
     "pino-http": "^5.8.0",
     "pino-papertrail": "^2.1.0",
+    "run-series": "^1.1.9",
     "send": "^0.17.1",
+    "simple-concat": "^1.0.1",
     "simple-concat-limit": "^2.0.3",
     "stripe": "^8.178.0",
     "toobusy-js": "^0.5.1",
@@ -21,6 +23,9 @@
     "creditstxt": "^1.0.2",
     "depcheck": "^1.4.2",
     "nyc": "^15.1.0",
+    "parse5": "^6.0.1",
+    "playwright": "^1.15.1",
+    "rimraf": "^3.0.2",
     "standard": "^16.0.3",
     "tap": "^15.0.10"
   },
@@ -38,7 +43,7 @@
     "lint": "standard",
     "test": "NODE_ENV=test tap test/**/*.test.js && npm run test:server",
     "test:unit": "NODE_ENV=test tap test/unit/*.test.js",
-    "test:server": "NODE_ENV=test node test/oneoff/server.test.js",
+    "test:server": "NODE_ENV=test node test/scripts/*.test.js",
     "test:integration": "NODE_ENV=test tap test/integration/*.test.js"
   },
   "tap": {
