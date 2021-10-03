@@ -54,12 +54,6 @@ for (const file of [
   })
 }
 
-for (const basename of ['about']) {
-  routes.set(`/${basename}`, (request, response) => {
-    serveStaticPage(request, response, basename)
-  })
-}
-
 // HTTP Request Handler
 
 export default (request, response) => {
@@ -120,7 +114,7 @@ const header = `
 
 const footer = `
 <footer role=contentinfo>
-  <a class=spaced href=/about>About</a>
+  <a class=spaced href=/>About</a>
   <a class=spaced href=/agreement>Agreement</a>
   <a class=spaced href=mailto:${constants.support}>E-Mail</a>
   <a class=spaced href=/credits.txt>Credits</a>
@@ -234,32 +228,6 @@ function serveAgreeForm (request, response) {
 
 function servePay (request, response) {
   serve404(request, response)
-}
-
-function serveAgreement (request, response) {
-  response.setHeader('Content-Type', 'text/html')
-  response.end(html`
-<!doctype html>
-<html lang=en-US>
-  <head>
-    ${meta({
-      title: agreement.data.title,
-      description: agreement.data.description
-    })}
-    <title>${escapeHTML(agreement.data.title)}</title>
-  </head>
-  <body>
-    ${nav}
-    ${header}
-    <main role=main>
-      <h2>${escapeHTML(agreement.data.title)}</h2>
-      <p id=version>Version ${escapeHTML(agreement.data.version)}</p>
-      ${markdown(agreement.content)}
-    </main>
-    ${footer}
-  </body>
-</html>
-  `)
 }
 
 function serveVersion (request, response) {
