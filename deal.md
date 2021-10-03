@@ -1,6 +1,6 @@
 ---
 title: Deal
-version: "2021-10-03T16:47Z"
+version: "2021-10-03T17:05Z"
 description: terms for access to and use of SaaS Passport
 ---
 
@@ -18,7 +18,7 @@ Our fee applies whether you close a deal on our terms verbatim, use our terms an
 
 ***Nobody involved bringing {{name}} to you will be liable to you for any damages related to {{name}}, for any kind of legal claim. {{name}} comes strictly ["as is"](https://en.wikipedia.org/wiki/As_is). We don't make any guarantee that our terms are high quality or will work well for you. We don't guarantee our website will always stay up and have no [bugs](https://en.wikipedia.org/wiki/Software_bug).***
 
-We're selling forms here, [not any kind of attorney-client relationship](https://notlegaladvice.law). Even if you reach out to us with [feedback](/contribute) or [questions](/contact), we won't be responsible to you as a lawyer would. We do recommend you hire a good lawyer, even just to make sure {{name}} fits your business. We know many of you can't.
+We're selling forms here, [not any kind of attorney-client relationship](https://notlegaladvice.law). Even if you reach out to us with [feedback](/contribute) or [questions](/contact), we won't be responsible to you as a lawyer would. We do recommend you hire a good lawyer, even just to make sure {{name}} fits your business. We know too many of you can't.
 
 ### Copies
 
