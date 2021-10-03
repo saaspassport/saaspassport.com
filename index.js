@@ -299,7 +299,6 @@ function serveDealForm (request, response) {
     <main role=main>
       <form id=passwordForm method=post>
         <input type=hidden name=version value=${dealTerms.version}>
-        <h2>${escapeHTML(dealTerms.title)}</h2>
         <p id=version>These terms were last updated on ${formatTime(dealTerms.version)}.</p>
         <button id=agree type=submit>Agree and Continue</button>
         ${dealTerms.content}
