@@ -1,7 +1,9 @@
 ---
 title: SaaS Passport Access Agreement
-version: "2021-10-02"
+version: "2021-10-03T03:45Z"
 description: terms for access to and use of SaaS Passport
 ---
 
-TODO
+# Scope
+
+***To access SaaS Passport, you have to agree to these terms with Artless Devices LLC, the company behind SaaS Passport.***

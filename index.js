@@ -6,6 +6,7 @@ import cookie from 'cookie'
 import doNotCache from 'do-not-cache'
 import escapeHTML from 'escape-html'
 import formatDate from './format-date.js'
+import formatTime from './format-time.js'
 import fs from 'fs'
 import grayMatter from 'gray-matter'
 import html from './html.js'
@@ -170,7 +171,7 @@ function serveAgree (request, response) {
         limits: {
           fieldNameSize: 'version'.length,
           fields: 1,
-          fieldSizeLimit: 'YY-MM-DD'.length,
+          fieldSizeLimit: new Date().toISOString().length,
           parts: 1
         }
       })
@@ -223,7 +224,7 @@ function serveAgreeForm (request, response) {
       <form id=passwordForm method=post>
         <input type=hidden name=version value=${accessAgreement.version}>
         <h2>${escapeHTML(accessAgreement.title)}</h2>
-        <p id=version>Last Updated ${formatDate(accessAgreement.version)}</p>
+        <p id=version>Last Updated ${formatTime(accessAgreement.version)}</p>
         ${markdown(accessAgreement.markdown)}
         <button id=agree type=submit>Agree</button>
       </form>
