@@ -34,7 +34,8 @@ const routes = httpHash()
 
 routes.set('/', serveHomepage)
 routes.set('/pay', servePay)
-routes.set('/access', serveAccess)
+const accessHREF = '/access'
+routes.set(accessHREF, serveAccess)
 routes.set('/privacy', servePrivacy)
 routes.set('/stripe-webhook', serveStripeWebhook)
 routes.set('/versions', serveVersionsIndex)
@@ -120,7 +121,7 @@ const header = `
 
 const footer = `
 <footer role=contentinfo>
-  <a href=/access>Access Agreement</a>
+  <a href=${accessHREF}>Access Agreement</a>
   <a href=mailto:${constants.support}>E-Mail</a>
   <a href=/credits.txt>Credits</a>
   <p>an <a href=https://artlessdevices.com>Artless Devices</a> project</p>
@@ -467,9 +468,8 @@ function requireCookie (handler) {
     handler(request, response)
 
     function redirect () {
-      const location = '/access?' + querystring.stringify({
-        destination: request.url
-      })
+      const query = querystring.stringify({ destination: request.url })
+      const location = accessHREF + '?' + query
       serve303(request, response, location)
     }
   }
