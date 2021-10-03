@@ -3,8 +3,7 @@ export default () => {
   const variables = [
     { name: 'BASE_HREF', required: true },
     { name: 'DIRECTORY', required: true },
-    { name: 'STRIPE_SECRET_KEY', required: true },
-    { name: 'STRIPE_PUBLISHABLE_KEY', required: true }
+    { name: 'STRIPE_LINK', required: true }
   ]
   const returned = { missing: [] }
   variables.forEach(variable => {

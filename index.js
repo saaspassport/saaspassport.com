@@ -135,6 +135,7 @@ const nav = `
   <a href=/>About</a>
   <a href=${latestVersionHREF}>Latest Terms</a>
   <a href=/versions>Versions</a>
+  <a href=/pay>Pay</a>
 </nav>
 `
 
@@ -240,7 +241,7 @@ function serveAccessForm (request, response) {
 }
 
 function servePay (request, response) {
-  serve404(request, response)
+  serve302(request, response, process.env.STRIPE_LINK)
 }
 
 function serveVersionsIndex (request, response) {
