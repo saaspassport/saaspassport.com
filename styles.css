@@ -38,7 +38,7 @@ header[role=banner] h1 {
 
 nav[role=navigation] {
   margin-top: 1rem;
-  text-align: right;
+  text-align: left;
 }
 
 main[role=main] {
@@ -59,11 +59,13 @@ a[href]:hover {
   text-decoration: underline;
 }
 
-a[href].spaced {
+nav[role=navigation] a[href],
+footer[role=contentinfo] a[href] {
   margin-left: 0.75rem;
 }
 
-a[href].spaced:first-of-type {
+nav[role=navigation] a[href]:first-of-type,
+footer[role=contentinfo] a[href]:first-of-type {
   margin-left: 0;
 }
 

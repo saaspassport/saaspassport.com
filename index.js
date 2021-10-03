@@ -120,15 +120,17 @@ const header = `
 
 const footer = `
 <footer role=contentinfo>
-  <a class=spaced href=/>About</a>
-  <a class=spaced href=/agree>Access Agreement</a>
-  <a class=spaced href=mailto:${constants.support}>E-Mail</a>
-  <a class=spaced href=/credits.txt>Credits</a>
+  <a href=/agree>Access Agreement</a>
+  <a href=mailto:${constants.support}>E-Mail</a>
+  <a href=/credits.txt>Credits</a>
+  <p>an <a href=https://artlessdevices.com>Artless Devices</a> project</p>
 </footer>
 `
 
 const nav = `
 <nav role=navigation>
+  <a href=/>About</a>
+  <a href=/versions/latest>Latest Terms</a>
 </nav>
 `
 
@@ -149,8 +151,8 @@ function serveHomepage (request, response) {
     <title>${constants.website}</title>
   </head>
   <body>
-    ${nav}
     ${header}
+    ${nav}
     <main role=main>
       ${about}
     </main>
@@ -220,6 +222,7 @@ function serveAgreeForm (request, response) {
   </head>
   <body>
     ${header}
+    ${nav}
     <main role=main>
       <form id=passwordForm method=post>
         <input type=hidden name=version value=${accessAgreement.version}>
@@ -274,8 +277,8 @@ function serveVersion (request, response) {
     <title>${constants.website}</title>
   </head>
   <body>
-    ${nav}
     ${header}
+    ${nav}
     <main role=main>
       <h2>Version ${version}</h2>
       <h3>Prompts</h3>
@@ -361,8 +364,8 @@ function serve404 (request, response) {
     <title>${title}</title>
   </head>
   <body>
-    ${nav}
     ${header}
+    ${nav}
     <main role=main>
       <h2>${title}</h2>
       <p>The page you tried to visit doesn’t exist on this site.</p>
