@@ -14,6 +14,7 @@ import mustache from 'mustache'
 import parseURL from 'url-parse'
 import path from 'path'
 import querystring from 'querystring'
+import relativeDate from 'tiny-relative-date'
 import runParallel from 'run-parallel'
 import semver from 'semver'
 import send from 'send'
@@ -299,7 +300,7 @@ function serveDealForm (request, response) {
     <main role=main>
       <form id=passwordForm method=post>
         <input type=hidden name=version value=${escapeHTML(dealTerms.version)}>
-        <p id=version>These terms were last updated on ${escapeHTML(formatTime(dealTerms.version))}.</p>
+        <p id=version>These terms were last updated ${escapeHTML(relativeDate(new Date(dealTerms.version)))}, on ${escapeHTML(formatTime(dealTerms.version))}.</p>
         <button id=agree type=submit>Agree and Continue</button>
         ${dealTerms.content}
         <button id=agree type=submit>Agree and Continue</button>
