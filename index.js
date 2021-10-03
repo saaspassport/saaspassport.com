@@ -19,6 +19,7 @@ import runParallel from 'run-parallel'
 import semver from 'semver'
 import send from 'send'
 import yaml from 'js-yaml'
+import { spawnSync } from 'child_process'
 
 const about = preloadMarkdown('about.md')
 const contribute = preloadMarkdown('contribute.md')
@@ -26,14 +27,14 @@ const thanks = preloadMarkdown('thanks.md')
 const contact = preloadMarkdown('contact.md')
 const versionsBlurb = preloadMarkdown('versions.md')
 const dealTerms = (() => {
-  const { content, data: { version, title, description } } = grayMatter(fs.readFileSync('deal.md', 'utf8'))
+  const { content, data: { title, description } } = grayMatter(fs.readFileSync('deal.md', 'utf8'))
   return {
-    version,
     title,
     description,
     content: preprocessMarkdown(content)
   }
 })()
+dealTerms.version = spawnSync('git', ['log', '-1', '--format="%ad"', '--date=iso-strict', '--', 'deal.md'], { encoding: 'utf8', shell: true }).stdout.trim()
 
 function preloadMarkdown (file) {
   return preprocessMarkdown(fs.readFileSync(file, 'utf8'))

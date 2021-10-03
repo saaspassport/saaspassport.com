@@ -1,6 +1,5 @@
 ---
 title: Deal
-version: "2021-10-03T17:06Z"
 description: terms for access to and use of SaaS Passport
 ---
 
