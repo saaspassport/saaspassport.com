@@ -4,6 +4,7 @@ import constants from './constants.js'
 import cookie from 'cookie'
 import doNotCache from 'do-not-cache'
 import escapeHTML from 'escape-html'
+import etag from 'etag'
 import formatTime from './format-time.js'
 import fs from 'fs'
 import grayMatter from 'gray-matter'
@@ -74,13 +75,17 @@ const staticFiles = {
   'logo-on-white-100.png': 'image/png'
 }
 for (const name in staticFiles) {
+  const data = fs.readFileSync(name, 'utf8')
   staticFiles[name] = {
     content: staticFiles[name],
-    data: fs.readFileSync(name, 'utf8')
+    data,
+    etag: etag(data)
   }
   routes.set(`/${name}`, (request, response) => {
-    response.setHeader('Content-Type', staticFiles[name].content)
-    response.end(staticFiles[name].data)
+    const { etag, data, content } = staticFiles[name]
+    response.setHeader('Content-Type', content)
+    response.setHeader('ETag', etag)
+    response.end(data)
   })
 }
 
