@@ -43,7 +43,7 @@ If we update these terms, you will need to agree to them in order to keep access
 
 ### Side Deals
 
-If your use of {{name}} is covered by another, separate deal with Artless Devices, that deal, not these terms, govern your use.  For example, if your company has a deal for use of {{name}} on a flat fee per month, you don't have to pay our per-closing fee under these terms.
+If your use of {{name}} is covered by another, separate deal with Artless Devices, that deal, not these terms, govern your use.  For example, if your company has a deal for use of {{name}} on a flat fee per month, you don't have to pay our published fee under these terms.
 
 ### The End
 
