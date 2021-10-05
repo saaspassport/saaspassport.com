@@ -23,7 +23,7 @@ We're selling forms here, [not any kind of attorney-client relationship](https:/
 
 ***We give you permission to make copies of {{name}} terms to review, learn, teach, negotiate, and keep records of your deals. You can share copies with others. But you have to follow a few simple rules.***
 
-If you make changes to {{name}} terms, other than just to fill them out as directed, clarify that your terms aren't the same as {{name}} anymore. Ideally, remove all mention of "{{name}}" and "{{website}}" from your copy. If you're sure you can be clear about it, you can also note that your terms are "based on {{name}}" or "derived from {{name}}".
+If you make changes to {{name}} terms, other than just to fill them out as directed, clarify that your terms aren't the same as {{name}} anymore. If you can add a note that your terms are "based on {{name}}" or "derived from {{name}}" where readers will be likely to see and notice, do so. Otherwise, remove all mention of "{{name}}" and "{{website}}" from your copy.
 
 Don't remove any of our notes about copyrights, trademarks, licenses, or other legal terms that apply to our work. Where our terms go, those notes must go.
 
