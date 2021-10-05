@@ -41,6 +41,10 @@ This version of our terms replace any earlier version of our terms you may have 
 
 If we update these terms, you will need to agree to them in order to keep accessing and using {{name}}.
 
+### Side Deals
+
+If your use of {{name}} is covered by another, separate deal with Artless Devices, that deal, not these terms, govern your use.  For example, if your company has a deal for use of {{name}} on a flat fee per month, you don't have to pay our per-closing fee under these terms.
+
 ### The End
 
 These are all the terms of our deal about {{name}}.  Thanks for reading.
