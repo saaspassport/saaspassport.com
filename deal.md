@@ -49,7 +49,7 @@ This version of our terms replaces any earlier version you may have agreed to. I
 
 ### Side Deals
 
-If your use of {{name}} is covered by another, separate deal with Artless Devices, that deal, not these terms, govern your use.  For example, if your company has a deal for use of {{name}} on a flat fee per month, you don't have to pay our published fee under these terms.
+If your use of {{name}} is covered by another, separate deal, that deal, not these terms, govern your use.  For example, if your company has a deal for use of {{name}} for a flat fee per month, you don't have to pay our published fee under these terms, too.
 
 ### The End
 
