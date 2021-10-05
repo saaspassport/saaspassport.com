@@ -37,9 +37,7 @@ We know you're not all in Oakland. But we can't really know what these terms mea
 
 ### Changes
 
-This version of our terms replaces any earlier version you may have agreed to.
-
-If we update these terms again, you will need to agree to them in order to keep accessing and using {{name}}.
+This version of our terms replaces any earlier version you may have agreed to. If we update these terms again, you will need to agree to them in order to keep accessing and using {{name}}.
 
 ### Side Deals
 
