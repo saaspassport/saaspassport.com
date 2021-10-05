@@ -35,6 +35,12 @@ Don't republish our terms, especially on the open Internet. People who want our 
 
 We know you're not all in Oakland. But we can't really know what these terms mean, or whether they'll work, without pinning down what law applies. There are also a lot of you, everywhere, and just one of us. If you could sue us in a thousand different places, we could end up spending all our precious closing fees on plane tickets, lawyers, and translators. And then some.
 
+### Changes
+
+This version of our terms replace any earlier version of our terms you may have agreed to.
+
+If we update these terms, you will need to agree to them in order to keep accessing and using {{name}}.
+
 ### The End
 
 These are all the terms of our deal about {{name}}.  Thanks for reading.
