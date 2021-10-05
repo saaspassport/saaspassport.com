@@ -17,7 +17,6 @@ import querystring from 'querystring'
 import relativeDate from 'tiny-relative-date'
 import runParallel from 'run-parallel'
 import semver from 'semver'
-import send from 'send'
 import yaml from 'js-yaml'
 import { spawnSync } from 'child_process'
 
@@ -65,17 +64,23 @@ if (process.env.NODE_ENV !== 'production') {
   })
 }
 
-for (const file of [
-  'ads.txt',
-  'styles.css',
-  'normalize.css',
-  'credits.txt',
-  'security.txt',
-  'logo.svg',
-  'logo-on-white-100.png'
-]) {
-  routes.set(`/${file}`, (request, response) => {
-    send(request, file).pipe(response)
+const staticFiles = {
+  'ads.txt': 'text/plain; charset=UTF-8',
+  'styles.css': 'text/css; charset=UTF-8',
+  'normalize.css': 'text/css; charset=UTF-8',
+  'credits.txt': 'text/plain; charset=UTF-8',
+  'security.txt': 'text/plain; charset=UTF-8',
+  'logo.svg': 'image/svg+xml',
+  'logo-on-white-100.png': 'image/png'
+}
+for (const name in staticFiles) {
+  staticFiles[name] = {
+    content: staticFiles[name],
+    data: fs.readFileSync(name, 'utf8')
+  }
+  routes.set(`/${name}`, (request, response) => {
+    response.setHeader('Content-Type', staticFiles[name].content)
+    response.end(staticFiles[name].data)
   })
 }
 

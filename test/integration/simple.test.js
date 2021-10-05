@@ -25,10 +25,34 @@ simple({
 })
 
 simple({
+  path: '/logo.svg',
+  status: 200,
+  mime: 'image/svg+xml'
+})
+
+simple({
+  path: '/logo-on-white-100.png',
+  status: 200,
+  mime: 'image/png'
+})
+
+simple({
   path: '/security.txt',
   status: 200,
   mime: 'text/plain; charset=UTF-8',
   content: 'security@'
+})
+
+simple({
+  path: '/ads.txt',
+  status: 200,
+  mime: 'text/plain; charset=UTF-8'
+})
+
+simple({
+  path: '/credits.txt',
+  status: 200,
+  mime: 'text/plain; charset=UTF-8'
 })
 
 simple({
