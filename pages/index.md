@@ -2,7 +2,7 @@
 title: Home
 ---
 
-<a class="getStarted" href="/versions/{{latest}}">Find Terms for Your Deal</a>
+<a class="getStarted" href="/versions/{{latestVersion}}">Find Terms for Your Deal</a>
 
 {{name}} offers customizable legal terms for selling software as a service.
 

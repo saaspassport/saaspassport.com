@@ -85,7 +85,7 @@ for (const number in versions) {
     number,
     datetime: dateObject.toISOString(),
     dateString,
-    isLatest: number === globals.latest
+    isLatest: number === globals.latestVersion
   })
   const html = mustache.render(templates.version, view, partials)
   fs.writeFileSync(path.join(site, 'versions', number, 'index.html'), html)
@@ -110,7 +110,7 @@ for (const number in licenseVersions) {
     title: `License ${number}`,
     datetime: dateObject.toISOString(),
     dateString,
-    isLatest: number === globals.latestLicense
+    isLatest: number === globals.latestVersion
   })
   const content = markdownToHTML(markdown, { unsafe: true })
   const partialsWithContent = Object.assign({}, partials, { content })
