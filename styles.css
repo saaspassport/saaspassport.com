@@ -113,3 +113,46 @@ mark {
   font-style: italic;
   font-weight: bold;
 }
+
+.success, .danger, .warning, .info {
+  border-radius: 0.25rem;
+}
+
+.success a[href], .danger a[href], .warning a[href], .info a[href] {
+  text-decoration: underline;
+}
+
+.success { background-color: #28a74520; }
+.success, .success a[href] { color: #28a745; }
+
+.danger { background-color: #dc354520; }
+.danger, .danger a[href] { color: #dc3545; }
+
+.warning { background-color: #ffc10720; }
+.warning, .warning a[href] { color: #343a40; }
+
+.info { background-color: #17a2b820; }
+.info, .info a[href] { color: #17a2b8; }
+
+aside {
+  padding: 0.1rem 1rem;
+}
+
+.getStarted {
+  background-color: #28a745;
+  border: 1px solid #38a745;
+  border-radius: 1ex;
+  color: white;
+  cursor: pointer;
+  display: inline-block;
+  padding: 1ex 1.5ex;
+  text-decoration: none;
+  vertical-align: middle;
+}
+
+.getStarted[href]:hover {
+  background-color: #218838;
+  border-color: #218838;
+  color: white;
+  text-decoration: none;
+}
