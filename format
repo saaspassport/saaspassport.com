@@ -1,0 +1,2 @@
+#!/bin/sh
+exec find site -iname "*.html" -exec sh -c "echo {}; tidy -config ./tidy.config -modify {}" \;

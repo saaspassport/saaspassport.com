@@ -16,6 +16,7 @@
   },
   "scripts": {
     "build": "./build",
+    "postbuild": "./format",
     "credits": "cp credits.txt.header static/credits.txt ; creditstxt >> static/credits.txt",
     "licenses": "licensee --errors-only | tee licenses.log"
   }
