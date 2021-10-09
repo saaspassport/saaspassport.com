@@ -118,6 +118,22 @@ for (const number in licenseVersions) {
   fs.writeFileSync(path.join(site, 'license', `${number}.html`), html)
 }
 
+// Write latest-license redirect.
+(() => {
+  const number = globals.latestLicense
+  const url = `${globals.base}/license/${number}`
+  fs.writeFileSync(path.join(site, 'license', 'latest.html'), `
+<!doctype html>
+<head>
+  <title>Redirecting</title>
+  <meta http-equiv="refresh" content="0; url=/license/${number}">
+</head>
+<body>
+<p>Redirecting to version ${number} at <a href="${url}">${url}</a>…</p>
+</body>
+</html>`.trimStart())
+})()
+
 // Write version indexes.
 for (const [source, title, directory] of [[licenseVersions, 'License Versions', 'license'], [versions, 'Versions', 'versions']]) {
   const view = Object.assign({}, globals, {
