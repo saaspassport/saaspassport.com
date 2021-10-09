@@ -137,3 +137,22 @@ mark {
 aside {
   padding: 0.1rem 1rem;
 }
+
+.getStarted {
+  background-color: #28a745;
+  border: 1px solid #38a745;
+  border-radius: 1ex;
+  color: white;
+  cursor: pointer;
+  display: inline-block;
+  padding: 1ex 1.5ex;
+  text-decoration: none;
+  vertical-align: middle;
+}
+
+.getStarted[href]:hover {
+  background-color: #218838;
+  border-color: #218838;
+  color: white;
+  text-decoration: none;
+}
