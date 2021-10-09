@@ -11,13 +11,11 @@
   "devDependencies": {
     "creditstxt": "^1.0.2",
     "licensee": "^8.2.0",
-    "rimraf": "^3.0.2",
-    "standard": "^16.0.3"
+    "rimraf": "^3.0.2"
   },
   "scripts": {
     "build": "./build",
     "credits": "cp credits.txt.header static/credits.txt ; creditstxt >> static/credits.txt",
-    "licenses": "licensee --errors-only | tee licenses.log",
-    "lint": "standard"
+    "licenses": "licensee --errors-only | tee licenses.log"
   }
 }
