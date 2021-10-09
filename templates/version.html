@@ -2,21 +2,23 @@
 <html lang=en-US>
   <head>
     {{>meta}}
-    <title>{{name}} — {{title}}</title>
+    <title>{{name}} {{number}}</title>
   </head>
   <body>
     {{>header}}
     {{>nav}}
     <main role=main>
-      <h2>License</h2>
       <p>Version {{number}}, Published <time datetime="{{datetime}}">{{dateString}}</time></p>
       {{^isLatest}}
       <aside class=danger>
-        <p>A <a href=/license/{{latestLicense}}>newer version</a> of the license now applies.</p>
+        <p>A <a href=/versions/{{latestVersion}}>newer version</a> of {{name}} is available.</p>
       </aside>
       {{/isLatest}}
-      {{>content}}
+      <noscript>
+        <p>{{name}} requires JavaScript to help you build terms, but your web browser has it turned off.</p>
+      </noscript>
     </main>
     {{>footer}}
+    <script src=/versions/{{number}}/script.js></script>
   </body>
 </html>

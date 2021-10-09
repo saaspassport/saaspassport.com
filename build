@@ -48,7 +48,7 @@ for (const version of fs.readdirSync('versions')) {
   const prompts = loadYAML(fs.readFileSync(promptsFile, 'utf8'))
   versions[version] = Object.assign(readAuthorDate(promptsFile), { prompts })
 }
-globals.latest = Object.keys(versions).sort(semver.rcompare)[0]
+globals.latestVersion = Object.keys(versions).sort(semver.rcompare)[0]
 
 function displayTime (date) {
   return new Intl.DateTimeFormat('en-US', { dateStyle: 'long', timeStyle: 'short', timeZone: 'UTC' }).format(date)
@@ -63,13 +63,32 @@ function readAuthorDate (file) {
 
 // TODO: write versions
 fs.mkdirSync(path.join('site', 'versions'))
-for (const version in versions) {
-  fs.mkdirSync(path.join('site', 'versions', version))
-  const filesDirectory = path.join('versions', version, 'files')
+for (const number in versions) {
+  fs.mkdirSync(path.join('site', 'versions', number))
+  const { dateObject, dateString } = versions[number]
+
+  const directory = path.join('versions', number)
+  const filesDirectory = path.join(directory, 'files')
   for (const file of fs.readdirSync(filesDirectory)) {
     const realpath = fs.realpathSync(path.join(filesDirectory, file))
-    fs.symlinkSync(realpath, path.join(site, 'versions', version, file))
+    fs.symlinkSync(realpath, path.join(site, 'versions', number, file))
   }
+
+  const scriptFile = 'script.js'
+  fs.symlinkSync(
+    fs.realpathSync(path.join(directory, scriptFile)),
+    path.join('site', 'versions', number, scriptFile)
+  )
+
+  // Write index.
+  const view = Object.assign({}, globals, {
+    number,
+    datetime: dateObject.toISOString(),
+    dateString,
+    isLatest: number === globals.latest
+  })
+  const html = mustache.render(templates.version, view, partials)
+  fs.writeFileSync(path.join(site, 'versions', number, 'index.html'), html)
 }
 
 // Read license versions.
@@ -84,19 +103,19 @@ globals.latestLicense = Object.keys(licenseVersions).sort(semver.rcompare)[0]
 
 // Write license pages.
 fs.mkdirSync(path.join('site', 'license'))
-for (const version in licenseVersions) {
-  const { markdown, dateObject, dateString } = licenseVersions[version]
+for (const number in licenseVersions) {
+  const { markdown, dateObject, dateString } = licenseVersions[number]
   const view = Object.assign({}, globals, {
-    version,
-    title: `License ${version}`,
+    number,
+    title: `License ${number}`,
     datetime: dateObject.toISOString(),
     dateString,
-    latest: version === globals.latestLicense
+    isLatest: number === globals.latestLicense
   })
   const content = markdownToHTML(markdown, { unsafe: true })
   const partialsWithContent = Object.assign({}, partials, { content })
   const html = mustache.render(templates.license, view, partialsWithContent)
-  fs.writeFileSync(path.join(site, 'license', `${version}.html`), html)
+  fs.writeFileSync(path.join(site, 'license', `${number}.html`), html)
 }
 
 // Write version indexes.
