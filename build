@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 const fs = require('fs')
 const grayMatter = require('gray-matter')
-const markdownToHTML = require('kemarkdown')
+const commonmark = require('commonmark')
 const mustache = require('mustache')
 const path = require('path')
 const rimraf = require('rimraf')
@@ -217,4 +217,11 @@ for (const file of fs.readdirSync('pages')) {
     html = mustache.render(parsed.content, view, partials)
   }
   fs.writeFileSync(path.join(site, `${basename}.html`), html)
+}
+
+function markdownToHTML (input) {
+  const reader = new commonmark.Parser()
+  const writer = new commonmark.HtmlRenderer()
+  const parsed = reader.parse(input, { smart: true, safe: false })
+  return writer.render(parsed)
 }
