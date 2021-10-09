@@ -9,7 +9,7 @@
   },
   "devDependencies": {
     "commonmark": "^0.30.0",
-    "creditstxt": "^1.0.2",
+    "creditstxt": "^2.0.0",
     "licensee": "^8.2.0",
     "rimraf": "^3.0.2",
     "rss": "^1.2.2"
