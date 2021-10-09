@@ -5,12 +5,5 @@
       "CC-BY-3.0"
     ]
   },
-  "packages": {
-    "caniuse-lite": "1.0.30001263 || 1.0.30001258",
-    "css-value": "0.0.1",
-    "precond": "0.2.3",
-    "scss-parser": "1.0.5",
-    "toobusy-js": "0.5.1"
-  },
   "corrections": true
 }
