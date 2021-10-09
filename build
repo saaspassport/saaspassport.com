@@ -5,6 +5,7 @@ const markdownToHTML = require('kemarkdown')
 const mustache = require('mustache')
 const path = require('path')
 const rimraf = require('rimraf')
+const RSS = require('rss')
 const semver = require('semver')
 const { spawnSync } = require('child_process')
 const yaml = require('js-yaml')
@@ -61,7 +62,8 @@ function readAuthorDate (file) {
   return { authorDate, dateObject, dateString }
 }
 
-// TODO: write versions
+// TODO: Write version pages.
+const versionsFeedURL = `${globals.base}/versions/feed.xml`
 fs.mkdirSync(path.join('site', 'versions'))
 for (const number in versions) {
   fs.mkdirSync(path.join('site', 'versions', number))
@@ -85,11 +87,32 @@ for (const number in versions) {
     number,
     datetime: dateObject.toISOString(),
     dateString,
-    isLatest: number === globals.latestVersion
+    isLatest: number === globals.latestVersion,
+    feed: versionsFeedURL
   })
   const html = mustache.render(templates.version, view, partials)
   fs.writeFileSync(path.join(site, 'versions', number, 'index.html'), html)
 }
+
+// Write versions RSS feed.
+(() => {
+  const feed = new RSS({
+    title: `${globals.name} Versions`,
+    description: `versions of ${globals.name} terms`,
+    feed_url: versionsFeedURL,
+    site_url: globals.base,
+    image_url: `${globals.base}/logo-on-white-100.png`
+  })
+  for (const number in versions) {
+    const { dateObject } = versions[number]
+    feed.item({
+      title: `${globals.name} Version ${number}`,
+      url: `${globals.base}/versions/${number}`,
+      date: dateObject
+    })
+  }
+  fs.writeFileSync(path.join(site, 'versions', 'feed.xml'), feed.xml({ indent: true }))
+})()
 
 // Read license versions.
 const licenseVersions = {}
@@ -102,6 +125,7 @@ for (const file of fs.readdirSync('license')) {
 globals.latestLicense = Object.keys(licenseVersions).sort(semver.rcompare)[0]
 
 // Write license pages.
+const licenseVersionsFeedURL = `${globals.base}/license/feed.xml`
 fs.mkdirSync(path.join('site', 'license'))
 for (const number in licenseVersions) {
   const { markdown, dateObject, dateString } = licenseVersions[number]
@@ -110,13 +134,34 @@ for (const number in licenseVersions) {
     title: `License ${number}`,
     datetime: dateObject.toISOString(),
     dateString,
-    isLatest: number === globals.latestVersion
+    isLatest: number === globals.latestVersion,
+    feed: licenseVersionsFeedURL
   })
   const content = markdownToHTML(markdown, { unsafe: true })
   const partialsWithContent = Object.assign({}, partials, { content })
   const html = mustache.render(templates.license, view, partialsWithContent)
   fs.writeFileSync(path.join(site, 'license', `${number}.html`), html)
 }
+
+// Write license versions RSS feed.
+(() => {
+  const feed = new RSS({
+    title: `${globals.name} License Versions`,
+    description: `versions of ${globals.name} license terms`,
+    feed_url: licenseVersionsFeedURL,
+    site_url: globals.base,
+    image_url: `${globals.base}/logo-on-white-100.png`
+  })
+  for (const number in licenseVersions) {
+    const { dateObject } = licenseVersions[number]
+    feed.item({
+      title: `${globals.name} License Version ${number}`,
+      url: `${globals.base}/license/${number}`,
+      date: dateObject
+    })
+  }
+  fs.writeFileSync(path.join(site, 'license', 'feed.xml'), feed.xml({ indent: true }))
+})();
 
 // Write latest-license redirect.
 (() => {
@@ -135,7 +180,10 @@ for (const number in licenseVersions) {
 })()
 
 // Write version indexes.
-for (const [source, title, directory] of [[licenseVersions, 'License Versions', 'license'], [versions, 'Versions', 'versions']]) {
+for (const [source, title, directory, feedURL] of [
+  [licenseVersions, 'License Versions', 'license', licenseVersionsFeedURL],
+  [versions, 'Versions', 'versions', versionsFeedURL]
+]) {
   const view = Object.assign({}, globals, {
     title,
     heading: title,
@@ -147,7 +195,8 @@ for (const [source, title, directory] of [[licenseVersions, 'License Versions', 
           date: source[number].dateString,
           href: `/${directory}/${number}`
         }
-      })
+      }),
+    feed: feedURL
   })
   const html = mustache.render(templates.versions, view, partials)
   fs.writeFileSync(path.join(site, directory, 'index.html'), html)
