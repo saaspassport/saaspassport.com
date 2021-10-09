@@ -63,6 +63,13 @@ function readAuthorDate (file) {
 
 // TODO: write versions
 fs.mkdirSync(path.join('site', 'versions'))
+for (const version in versions) {
+  fs.mkdirSync(path.join('site', 'versions', version))
+  const filesDirectory = path.join('versions', version, 'files')
+  for (const file of fs.readdirSync(filesDirectory)) {
+    fs.symlinkSync(path.join(filesDirectory, file), path.join(site, 'versions', version, file))
+  }
+}
 
 // Read license versions.
 const licenseVersions = {}
