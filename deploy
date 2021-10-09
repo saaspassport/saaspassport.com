@@ -3,4 +3,4 @@ set -e
 SITE=saaspassport.com
 npm run build
 npm run credits
-rsync -avz --copy-links site/ "$SITE:/var/www/$SITE/"
+rsync --archive --delete --compress --copy-links site/ "$SITE:/var/www/$SITE/"
