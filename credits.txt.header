@@ -1,2 +1,16 @@
-saaspssport.com uses open software from the following npm package authors and contributors:
+saaspssport.com uses open software, including the Linux kernel, the Debian distribution, NGINX, Node.js, npm, and the following npm package authors and contributors:
+
+The Linux Kernel (https://linux.org)
+
+Debian (https://debian.org)
+
+NGINX (https://nginx.org)
+
+Node.js (https://nodejs.org)
+
+npm (https://npmjs.com)
+
+HTML Tidy (https://html-tidy.org)
+
+npm packages from the following authors and contributors:
 
