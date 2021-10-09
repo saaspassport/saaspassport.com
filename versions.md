@@ -1,1 +1,0 @@
-Each new version of {{name}} gets assigned a unique version number. Once published, the contents of that version of {{name}} never change. When we find ways to improve it, we publish a new version with a new, unique version number.  Old versions remain available here on {{website}}.

@@ -1,14 +1,6 @@
 #!/bin/sh
-git push origin
-ssh app@saaspassport.com <<'SCRIPT'
-cd saaspassport.com
-old_hash="$(shasum package-lock.json)"
-git fetch origin
-git reset --hard origin/main
-new_hash="$(shasum package-lock.json)"
-if [ "$old_hash" != "$new_hash" ]; then
-  npm ci --no-audit --no-fund
-  npm run credits
-fi
-systemctl --user restart saaspassport
-SCRIPT
+set -e
+SITE=saaspassport.com
+npm run build
+npm run credits
+rsync -avz site/ "$SITE:/var/www/$SITE/"

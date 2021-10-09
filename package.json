@@ -1,57 +1,23 @@
 {
   "name": "saaspassport.com",
   "private": true,
-  "type": "module",
   "dependencies": {
-    "busboy": "^0.3.1",
-    "cookie": "^0.4.1",
-    "do-not-cache": "^1.0.1",
-    "escape-html": "^1.0.3",
-    "etag": "^1.8.1",
     "gray-matter": "^4.0.3",
-    "http-hash": "^2.0.1",
     "js-yaml": "^4.1.0",
     "kemarkdown": "^3.0.0",
     "mustache": "^4.2.0",
-    "pino": "^6.13.3",
-    "pino-http": "^5.8.0",
-    "run-parallel": "^1.2.0",
-    "semver": "^7.3.5",
-    "simple-concat": "^1.0.1",
-    "tiny-relative-date": "^1.3.0",
-    "toobusy-js": "^0.5.1",
-    "url-parse": "^1.5.3"
+    "semver": "^7.3.5"
   },
   "devDependencies": {
     "creditstxt": "^1.0.2",
-    "depcheck": "^1.4.2",
     "licensee": "^8.2.0",
-    "nyc": "^15.1.0",
-    "parse5": "^6.0.1",
-    "playwright": "^1.15.1",
     "rimraf": "^3.0.2",
-    "standard": "^16.0.3",
-    "tap": "^15.0.10"
+    "standard": "^16.0.3"
   },
   "scripts": {
-    "audit": "npm audit --production | tee audit.log",
-    "prestart": "if test \"$NODE_ENV\" = \"production\"; then npm run credits ; fi",
-    "credits": "cp credits.txt.header credits.txt ; creditstxt >> credits.txt",
-    "check": "npm run lint && npm run gotchas",
-    "coverage": "nyc --reporter=lcov --reporter=text npm run test",
-    "deps": "depcheck",
-    "fix": "standard --fix",
-    "gotchas": "! git grep tape.only test && ! git grep console.log test && ! git grep console.error test && ! git grep saveScreenshot test",
+    "build": "./build",
+    "credits": "cp credits.txt.header static/credits.txt ; creditstxt >> static/credits.txt",
     "licenses": "licensee --errors-only | tee licenses.log",
-    "lint": "standard",
-    "test": "NODE_ENV=test tap test/**/*.test.js",
-    "test:unit": "NODE_ENV=test tap test/unit/*.test.js",
-    "test:server": "NODE_ENV=test node test/scripts/*.test.js",
-    "test:integration": "NODE_ENV=test tap test/integration/*.test.js"
-  },
-  "tap": {
-    "no-timeout": true,
-    "reporter": "tap",
-    "jobs": 1
+    "lint": "standard"
   }
 }

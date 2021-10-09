@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang=en-US>
+  <head>
+    {{>meta}}
+    <title>{{name}} — {{title}}</title>
+  </head>
+  <body>
+    {{>header}}
+    {{>nav}}
+    <main role=main>
+      {{#heading}}<h2>{{heading}}</h2>{{/heading}}
+      <p>Once published, versions do not change. Any updates and improvements appear in new versions.</p>
+      <ul>
+        {{#versions}}
+        <li><a href={{{href}}}>Version {{number}}</a>, {{date}}</li>
+        {{/versions}}
+      </ul>
+    </main>
+    {{>footer}}
+  </body>
+</html>

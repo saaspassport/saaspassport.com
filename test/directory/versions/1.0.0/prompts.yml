@@ -1,9 +1,0 @@
----
-
-- id: disputes
-  name: Dispute Resolution
-  responses:
-    - id: litigation
-      name: Litigation
-    - id: arbitration
-      name: Arbitration

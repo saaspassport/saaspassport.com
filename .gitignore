@@ -1,2 +1,4 @@
 *.log
+static/credits.txt
 node_modules
+site

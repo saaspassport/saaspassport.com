@@ -1,3 +1,8 @@
+---
+title: Contact
+heading: Contact
+---
+
 [{{email}}](mailto:{{email}})
 
 Please remember that [we are not your lawyers](/deal#as-is). Don't send us anything confidential that you wouldn't share publicly on social media.

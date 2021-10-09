@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang=en-US>
+  <head>
+    {{>meta}}
+    <title>{{name}} — {{title}}</title>
+  </head>
+  <body>
+    {{>header}}
+    {{>nav}}
+    <main role=main>
+      <h2>License</h2>
+      <p>Version {{version}}, Published <time datetime="{{datetime}}">{{dateString}}</time></p>
+      {{^latest}}
+      <aside class=danger>
+        <p>A <a href=/license/{{latestLicense}}>newer version</a> of the license now applies.</p>
+      </aside>
+      {{/latest}}
+      {{>content}}
+    </main>
+    {{>footer}}
+  </body>
+</html>

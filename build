@@ -1,0 +1,128 @@
+#!/usr/bin/env node
+const fs = require('fs')
+const grayMatter = require('gray-matter')
+const markdownToHTML = require('kemarkdown')
+const mustache = require('mustache')
+const path = require('path')
+const rimraf = require('rimraf')
+const semver = require('semver')
+const { spawnSync } = require('child_process')
+const yaml = require('js-yaml')
+
+// Recreate site directory.
+const site = 'site'
+rimraf.sync('site')
+fs.mkdirSync('site')
+
+// Copy static files.
+for (const file of fs.readdirSync('static')) {
+  fs.copyFileSync(path.join('static', file), path.join(site, file))
+}
+
+// Read Mustache partials.
+const partials = {}
+for (const file of fs.readdirSync('partials')) {
+  partials[path.basename(file, '.html')] = fs.readFileSync(path.join('partials', file), 'utf8')
+}
+
+// Read global view data.
+const globals = (() => {
+  const data = fs.readFileSync('./globals.yml', 'utf8')
+  return loadYAML(data)
+})()
+
+function loadYAML (data) {
+  return yaml.load(data, { schema: yaml.JSON_SCHEMA })
+}
+
+// Read templates
+const templates = {}
+for (const file of fs.readdirSync('templates')) {
+  templates[path.basename(file, '.html')] = fs.readFileSync(path.join('templates', file), 'utf8')
+}
+
+// Read form versions.
+const versions = {}
+for (const version of fs.readdirSync('versions')) {
+  const promptsFile = path.join('versions', version, 'prompts.yml')
+  const prompts = loadYAML(fs.readFileSync(promptsFile, 'utf8'))
+  versions[version] = Object.assign(readAuthorDate(promptsFile), { prompts })
+}
+globals.latest = Object.keys(versions).sort(semver.rcompare)[0]
+
+function displayTime (date) {
+  return new Intl.DateTimeFormat('en-US', { dateStyle: 'long', timeStyle: 'short', timeZone: 'UTC' }).format(date)
+}
+
+function readAuthorDate (file) {
+  const authorDate = spawnSync('/usr/bin/git', ['log', '-1', '--format="%ad"', '--date=rfc', '--', file]).stdout.toString()
+  const dateObject = authorDate ? new Date(authorDate) : new Date()
+  const dateString = displayTime(dateObject)
+  return { authorDate, dateObject, dateString }
+}
+
+// TODO: write versions
+fs.mkdirSync(path.join('site', 'versions'))
+
+// Read license versions.
+const licenseVersions = {}
+for (const file of fs.readdirSync('license')) {
+  const version = path.basename(file, '.md')
+  const filePath = path.join('license', file)
+  const markdown = fs.readFileSync(filePath, 'utf8')
+  licenseVersions[version] = Object.assign(readAuthorDate(filePath), { markdown })
+}
+globals.latestLicense = Object.keys(licenseVersions).sort(semver.rcompare)[0]
+
+// Write license pages.
+fs.mkdirSync(path.join('site', 'license'))
+for (const version in licenseVersions) {
+  const { markdown, dateObject, dateString } = licenseVersions[version]
+  const view = Object.assign({}, globals, {
+    version,
+    title: `License ${version}`,
+    datetime: dateObject.toISOString(),
+    dateString,
+    latest: version === globals.latestLicense
+  })
+  const content = markdownToHTML(markdown, { unsafe: true })
+  const partialsWithContent = Object.assign({}, partials, { content })
+  const html = mustache.render(templates.license, view, partialsWithContent)
+  fs.writeFileSync(path.join(site, 'license', `${version}.html`), html)
+}
+
+// Write version indexes.
+for (const [source, title, directory] of [[licenseVersions, 'License Versions', 'license'], [versions, 'Versions', 'versions']]) {
+  const view = Object.assign({}, globals, {
+    title,
+    heading: title,
+    versions: Object.keys(source)
+      .sort(semver.rcompare)
+      .map(number => {
+        return {
+          number,
+          date: source[number].dateString,
+          href: `/${directory}/${number}`
+        }
+      })
+  })
+  const html = mustache.render(templates.versions, view, partials)
+  fs.writeFileSync(path.join(site, directory, 'index.html'), html)
+}
+
+// Write static pages.
+for (const file of fs.readdirSync('pages')) {
+  const extension = path.extname(file)
+  const basename = path.basename(file, extension)
+  const parsed = grayMatter(fs.readFileSync(path.join('pages', file), 'utf8'))
+  const view = Object.assign({}, globals, parsed.data)
+  let html
+  if (extension === '.md') {
+    const content = markdownToHTML(parsed.content, { unsafe: true })
+    const partialsWithContent = Object.assign({}, partials, { content })
+    html = mustache.render(templates.page, view, partialsWithContent)
+  } else {
+    html = mustache.render(parsed.content, view, partials)
+  }
+  fs.writeFileSync(path.join(site, `${basename}.html`), html)
+}
