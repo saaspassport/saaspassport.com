@@ -119,8 +119,9 @@ const licenseVersions = {}
 for (const file of fs.readdirSync('license')) {
   const version = path.basename(file, '.md')
   const filePath = path.join('license', file)
-  const markdown = fs.readFileSync(filePath, 'utf8')
-  licenseVersions[version] = Object.assign(readAuthorDate(filePath), { markdown })
+  const parsed = grayMatter(fs.readFileSync(filePath, 'utf8'))
+  const markdown = parsed.content
+  licenseVersions[version] = Object.assign(readAuthorDate(filePath), { markdown, meta: parsed.data })
 }
 globals.latestLicense = Object.keys(licenseVersions).sort(semver.rcompare)[0]
 
@@ -128,8 +129,8 @@ globals.latestLicense = Object.keys(licenseVersions).sort(semver.rcompare)[0]
 const licenseVersionsFeedURL = `${globals.base}/license/feed.xml`
 fs.mkdirSync(path.join('site', 'license'))
 for (const number in licenseVersions) {
-  const { markdown, dateObject, dateString } = licenseVersions[number]
-  const view = Object.assign({}, globals, {
+  const { markdown, dateObject, dateString, meta } = licenseVersions[number]
+  const view = Object.assign({}, globals, meta, {
     number,
     title: `License ${number}`,
     datetime: dateObject.toISOString(),
