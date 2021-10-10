@@ -135,7 +135,7 @@ for (const number in licenseVersions) {
     title: `License ${number}`,
     datetime: dateObject.toISOString(),
     dateString,
-    isLatest: number === globals.latestVersion,
+    isLatest: number === globals.latestLicense,
     feed: licenseVersionsFeedURL
   })
   const content = markdownToHTML(markdown, { unsafe: true })
