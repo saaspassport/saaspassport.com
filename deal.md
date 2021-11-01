@@ -5,7 +5,7 @@ description: terms for access to and use of SaaS Passport
 
 <mark>To access {{name}}, you have to agree to these terms with [Artless Devices LLC](https://artlessdevices.com/). Please read them. We've worked hard to keep them short.</mark>
 
-### Fees
+<h3 id="fees">Fees</h3>
 
 ***If you use SaaS Passport terms to close a deal with a customer, you owe us our published fee. Pay via [saaspassport.com/pay](https://saaspassport.com/pay) within two business days of closing.  Pay for each deal you close with our terms.***
 
@@ -15,7 +15,7 @@ This isn't a donation. It isn't a [tip](https://en.wikipedia.org/wiki/Gratuity).
 Our fee applies whether you close a deal on our terms verbatim, use our terms and make changes, or copy big chunks of our terms into your own. If you learn things from reading our terms, you obviously don't owe us any money for using what you learned. If you write your own, new terms partly inspired by ours, Godspeed. It's what we did.
 </details>
 
-### As Is
+<h3 id="as-is">As Is</h3>
 
 ***Nobody involved bringing {{name}} to you will be liable to you for any damages related to {{name}}, for any kind of legal claim. {{name}} comes strictly ["as is"](https://en.wikipedia.org/wiki/As_is). We don't make any guarantee that our terms are high quality or will work well for you. We don't guarantee our website will always stay up or have no [bugs](https://en.wikipedia.org/wiki/Software_bug).***
 
@@ -23,7 +23,7 @@ Our fee applies whether you close a deal on our terms verbatim, use our terms an
 We're selling forms here, [not any kind of attorney-client relationship](https://notlegaladvice.law). Even if you reach out to us with [feedback](/contribute) or [questions](/contact), we won't be responsible to you as a lawyer would. We do recommend you hire a good lawyer, even just to make sure {{name}} fits your business. We know too many of you can't.
 </details>
 
-### Copies
+<h3 id="copies">Copies</h3>
 
 We give you permission to make copies of {{name}} terms to review, learn, teach, negotiate, and keep records of your deals. You can share copies with others. But you have to follow a few simple rules.
 
@@ -35,7 +35,7 @@ Don't remove any of our notes about copyrights, trademarks, licenses, or other l
 Don't republish our terms, especially on the open Internet. People who want our terms should come to {{website}}, not try an end run around these terms by accessing copies you posted elsewhere. Don't share our terms with anyone privately who you believe plans to use without paying us.
 </details>
 
-### California
+<h3 id="california">California</h3>
 
 If we somehow end up suing each out about anything related to {{name}}, we agree to take it to federal or state court in [Oakland, California](https://en.wikipedia.org/wiki/Oakland,_California). California law will govern.
 
@@ -43,14 +43,14 @@ If we somehow end up suing each out about anything related to {{name}}, we agree
 We know you're not all in Oakland. But we can't really know what these terms mean, or whether they'll work, without pinning down what law applies. There are also a lot of you, everywhere, and just one of us. If you could sue us in a thousand different places, we could end up spending all our precious closing fees on plane tickets, lawyers, and translators. And then some.
 </details>
 
-### Changes
+<h3 id="changes">Changes</h3>
 
 This version of our terms replaces any earlier version you may have agreed to. If we update these terms again, you will need to agree to them in order to keep accessing and using {{name}}.
 
-### Side Deals
+<h3 id="side-deals">Side Deals</h3>
 
 If your use of {{name}} is covered by another, separate deal, that deal, not these terms, govern your use.  For example, if your company has a deal for use of {{name}} for a flat fee per month, you don't have to pay our published fee under these terms, too.
 
-### The End
+<h3 id="the-end">The End</h3>
 
 These are all the terms of our deal about {{name}}.  Thanks for reading.

@@ -1,6 +1,7 @@
 // HTTP Server Request Handler
 import Busboy from 'busboy'
 import constants from './constants.js'
+import * as commonmark from 'commonmark'
 import cookie from 'cookie'
 import doNotCache from 'do-not-cache'
 import escapeHTML from 'escape-html'
@@ -10,7 +11,6 @@ import fs from 'fs'
 import grayMatter from 'gray-matter'
 import html from './html.js'
 import httpHash from 'http-hash'
-import markdown from 'kemarkdown'
 import mustache from 'mustache'
 import parseURL from 'url-parse'
 import path from 'path'
@@ -559,4 +559,11 @@ function readLatestVersion (callback) {
 
 function replaceConstants (template) {
   return mustache.render(template, constants)
+}
+
+function markdown (input) {
+  const reader = new commonmark.Parser()
+  const writer = new commonmark.HtmlRenderer()
+  const parsed = reader.parse(input, { smart: true, safe: false })
+  return writer.render(parsed)
 }
