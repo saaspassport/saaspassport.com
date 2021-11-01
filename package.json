@@ -31,7 +31,7 @@
     "playwright": "^1.15.1",
     "rimraf": "^3.0.2",
     "standard": "^16.0.3",
-    "tap": "^15.0.10"
+    "tap": "^12.7.0"
   },
   "scripts": {
     "audit": "npm audit --production | tee audit.log",
